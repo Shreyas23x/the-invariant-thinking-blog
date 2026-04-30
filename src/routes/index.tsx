@@ -1,21 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { sortedPosts } from "@/data/posts";
+import { sortedPosts, CATEGORIES, postsByCategory } from "@/data/posts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "~/notebook — a personal blog" },
+      { title: "~/FoxLog — CS, Math Olympiad & NBA Analysis" },
       {
         name: "description",
         content:
-          "A personal blog: notes on math, software experiments, and the occasional tea log.",
+          "FoxLog: a personal blog on CS projects, math olympiad problems, and NBA analysis.",
       },
-      { property: "og:title", content: "~/notebook — a personal blog" },
+      { property: "og:title", content: "~/FoxLog" },
       {
         property: "og:description",
-        content:
-          "Notes on math, software experiments, and the occasional tea log.",
+        content: "CS projects, math olympiad problems, and NBA analysis.",
       },
     ],
   }),
@@ -27,23 +26,36 @@ function Index() {
 
   return (
     <SiteLayout
-      title="Welcome"
+      title="Welcome to FoxLog"
       sidebar={
         <div>
           <div className="otis-label text-xs">Status</div>
           <p className="mt-1 text-xs leading-relaxed">
-            ✦ Currently: writing more, shipping less.
+            ✦ Currently: shipping side projects, grinding olympiad sets,
+            watching too much basketball.
           </p>
         </div>
       }
     >
-      <Panel subtitle="Come meet me in the Ruby Palace~">
+      <Panel subtitle="A logbook for the three things I think about most.">
         <p className="leading-relaxed">
-          This is my little corner of the web — a notebook of things I'm
-          thinking about, breaking, fixing, or steeping. Expect short posts, a
-          lot of footnotes, and the occasional bad pun.
+          FoxLog is my little corner of the web. I write about three things,
+          and I try to keep them honest:
         </p>
-        <p className="mt-2 leading-relaxed">
+        <ul className="mt-3 grid gap-2 sm:grid-cols-3">
+          {CATEGORIES.map((cat) => {
+            const count = postsByCategory(cat).length;
+            return (
+              <li key={cat} className="border border-[#5266c0] bg-white p-3">
+                <div className="font-bold text-[#000055]">{cat}</div>
+                <div className="text-xs text-[#445]">
+                  {count} {count === 1 ? "post" : "posts"}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="mt-3 leading-relaxed">
           Start with the <Link to="/blog">blog index</Link>, or jump into a
           recent post below.
         </p>
@@ -62,13 +74,7 @@ function Index() {
                   {p.title}
                 </Link>
                 <span className="font-mono text-xs text-[#557]">{p.date}</span>
-                <div className="ml-auto flex gap-1">
-                  {p.tags.map((t) => (
-                    <span key={t} className="otis-tag">
-                      #{t}
-                    </span>
-                  ))}
-                </div>
+                <span className="otis-tag">{p.category}</span>
               </div>
               <p className="mt-1 text-sm leading-relaxed">{p.excerpt}</p>
             </li>
