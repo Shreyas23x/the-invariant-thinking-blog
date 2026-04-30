@@ -1,7 +1,16 @@
+export type Category = "CS Projects" | "Math Olympiad" | "NBA Analysis";
+
+export const CATEGORIES: Category[] = [
+  "CS Projects",
+  "Math Olympiad",
+  "NBA Analysis",
+];
+
 export type Post = {
   slug: string;
   title: string;
   date: string; // YYYY-MM-DD
+  category: Category;
   tags: string[];
   excerpt: string;
   body: string; // simple paragraphs separated by blank lines
@@ -12,7 +21,8 @@ export const posts: Post[] = [
     slug: "the-quadratic-formula",
     title: "Where the quadratic formula comes from",
     date: "2025-04-29",
-    tags: ["math", "algebra"],
+    category: "Math Olympiad",
+    tags: ["algebra", "derivation"],
     excerpt:
       "Completing the square, slowly, until the quadratic formula falls out on its own — no memorisation required.",
     body: `Everyone learns the quadratic formula. Far fewer people are shown where it comes from. The whole derivation is just one trick — *completing the square* — applied carefully. Let's do it together.
@@ -49,35 +59,38 @@ The reason I like this derivation: the formula isn't a magic incantation, it's t
     slug: "hello-world",
     title: "Hello, world ~",
     date: "2025-03-04",
+    category: "CS Projects",
     tags: ["meta", "intro"],
     excerpt:
-      "A first post. Why I'm starting this notebook, and what you can expect to find inside the cabin.",
-    body: `Welcome aboard! This little site is my personal logbook — somewhere between a blog, a wiki, and a scratchpad.
+      "A first post. Why I'm starting FoxLog, and what you can expect to find inside.",
+    body: `Welcome to FoxLog! This little site is my personal logbook — somewhere between a blog, a wiki, and a scratchpad.
 
-I plan to write about three things, mostly: math problems I'm chewing on, software experiments that didn't go to plan, and the occasional tea recommendation.
+I plan to write about three things, mostly: CS projects I'm shipping (or breaking), math olympiad problems I'm chewing on, and NBA analysis when the numbers get interesting.
 
 Posts will be short. Posts will be wrong sometimes. That's fine — a notebook is allowed to be wrong; that's the whole point of writing things down.`,
   },
   {
-    slug: "on-problem-solving",
-    title: "Notes on problem-solving",
+    slug: "amgm-warmup",
+    title: "An AM-GM warmup I keep coming back to",
     date: "2025-03-21",
-    tags: ["math", "thinking"],
+    category: "Math Olympiad",
+    tags: ["inequalities", "AM-GM"],
     excerpt:
-      "Three habits that made hard problems feel less hard: small examples, named conjectures, and writing the lemma you wish existed.",
-    body: `When I get stuck, I do three things, in this order.
+      "A tiny three-variable inequality that teaches you when AM-GM is the right hammer — and when it isn't.",
+    body: `Here is a problem I give myself whenever I haven't done olympiad inequalities in a while. For positive reals $a, b, c$ with $abc = 1$, prove
 
-First: shrink the problem. Try n = 1, 2, 3. Draw the picture. The point isn't the answer — it's noticing what *changes* between cases.
+$$\\frac{1}{a+b+1} + \\frac{1}{b+c+1} + \\frac{1}{c+a+1} \\leq 1.$$
 
-Second: name the thing. Even a bad name ("the wobbly set") gives you a handle. You can't do induction on a noun you haven't introduced.
+The tempting move is to AM-GM the denominators directly. That gives a bound in the wrong direction — a classic trap. The fix: substitute $a = x/y$, $b = y/z$, $c = z/x$ (which is automatic once $abc = 1$), clear denominators, and the inequality becomes a clean SOS.
 
-Third: write the lemma you wish existed. Pretend you have it. Use it. If the rest of the proof falls into place, the lemma is probably true — and now you know exactly what to prove.`,
+Lesson I keep relearning: AM-GM is a *finishing* tool, not an *opening* tool. Open with substitution or normalisation; close with AM-GM.`,
   },
   {
     slug: "tiny-tools",
     title: "Tiny tools I keep rewriting",
     date: "2025-04-12",
-    tags: ["software", "tools"],
+    category: "CS Projects",
+    tags: ["tools", "scripts"],
     excerpt:
       "Every year I rewrite the same three scripts: a Markdown indexer, a TODO scraper, and a tea timer. Here's why that's not a waste.",
     body: `I have rewritten the same Markdown indexer at least six times. Each version is a little better, a little smaller, a little more aware of what I actually use it for.
@@ -87,17 +100,20 @@ Rewriting tiny tools is not procrastination — it's how I learn the shape of a 
 If you have a tool you keep rewriting: keep going. The version where you finally throw away the abstraction is usually the best one.`,
   },
   {
-    slug: "ruby-palace-tea",
-    title: "Tea log: the ruby palace",
+    slug: "jokic-passing-network",
+    title: "Mapping Jokić's passing network",
     date: "2025-04-26",
-    tags: ["tea", "log"],
+    category: "NBA Analysis",
+    tags: ["jokic", "passing", "viz"],
     excerpt:
-      "A short review of a Yunnan black tea that has somehow ruined every other afternoon tea for me.",
-    body: `A friend mailed me a small tin of "ruby palace" — a Yunnan black, golden-tipped, smells faintly like cocoa.
+      "A weekend project: pulling play-by-play data and drawing the directed graph of who Jokić passes to, weighted by assist value.",
+    body: `Spent a Saturday pulling play-by-play data from the public NBA stats endpoints and drawing Nikola Jokić's passing graph as a directed, weighted network.
 
-Western brew, 4g / 200ml / 90°C / 3 minutes. The first cup is honey. The second cup is bread crust. The third cup is the rain on a Sunday.
+Two things jumped out. First: the edge from Jokić to the corner-three shooter is *thicker* than to the cutter at the rim — even though the cut feels more iconic. Volume isn't always where the highlights live.
 
-Verdict: dangerous. I will not be reviewing more tea this month, because nothing else stands a chance.`,
+Second: the network is unusually *flat*. Most stars have one or two dominant edges. Jokić's top five teammates each receive roughly the same share — which is part of why the Denver offense is so hard to scout.
+
+Next step: weight the edges by points-per-pass instead of raw assists, and see if the picture changes.`,
   },
 ];
 
@@ -107,4 +123,8 @@ export function getPost(slug: string) {
 
 export function sortedPosts() {
   return [...posts].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function postsByCategory(category: Category) {
+  return sortedPosts().filter((p) => p.category === category);
 }

@@ -35,7 +35,7 @@ export function SiteLayout({
         <div id="header" className="otis-header">
           <Link to="/">
             <h1 id="sitetitle" className="text-2xl sm:text-3xl">
-              ⛵ ~/notebook
+              𝔽(x) ~/FoxLog
             </h1>
           </Link>
         </div>
@@ -75,7 +75,7 @@ export function SiteLayout({
                   </a>
                 </span>
                 <span className="col-span-4 text-right text-2xl" aria-hidden>
-                  ⛵
+                  𝔼[X]
                 </span>
               </div>
             </div>
