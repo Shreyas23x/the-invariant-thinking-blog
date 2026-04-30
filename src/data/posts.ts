@@ -9,6 +9,43 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    slug: "the-quadratic-formula",
+    title: "Where the quadratic formula comes from",
+    date: "2025-04-29",
+    tags: ["math", "algebra"],
+    excerpt:
+      "Completing the square, slowly, until the quadratic formula falls out on its own — no memorisation required.",
+    body: `Everyone learns the quadratic formula. Far fewer people are shown where it comes from. The whole derivation is just one trick — *completing the square* — applied carefully. Let's do it together.
+
+We want to solve $ax^2 + bx + c = 0$, where $a \\neq 0$.
+
+Step 1. Divide through by $a$ so the leading coefficient is $1$:
+
+$$x^2 + \\frac{b}{a}\\,x + \\frac{c}{a} = 0.$$
+
+Step 2. Move the constant term to the other side:
+
+$$x^2 + \\frac{b}{a}\\,x = -\\frac{c}{a}.$$
+
+Step 3. Here is the trick. We want the left-hand side to be a perfect square $(x + k)^2 = x^2 + 2kx + k^2$. Matching the middle term forces $2k = b/a$, so $k = b/(2a)$. Add $k^2 = b^2/(4a^2)$ to both sides:
+
+$$x^2 + \\frac{b}{a}\\,x + \\frac{b^2}{4a^2} = \\frac{b^2}{4a^2} - \\frac{c}{a}.$$
+
+Step 4. The left side is now a perfect square, and we tidy the right side over a common denominator:
+
+$$\\left(x + \\frac{b}{2a}\\right)^2 = \\frac{b^2 - 4ac}{4a^2}.$$
+
+Step 5. Take square roots — remembering the $\\pm$ — and solve for $x$:
+
+$$x + \\frac{b}{2a} = \\pm\\frac{\\sqrt{b^2 - 4ac}}{2a}, \\qquad x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}.$$
+
+That's the quadratic formula, and the quantity $\\Delta = b^2 - 4ac$ is the *discriminant*. If $\\Delta > 0$ there are two real roots; if $\\Delta = 0$ a repeated root $x = -b/(2a)$; if $\\Delta < 0$ two complex conjugate roots.
+
+A small sanity check. Take $x^2 - 5x + 6 = 0$, so $a=1$, $b=-5$, $c=6$, and $\\Delta = 25 - 24 = 1$. Then $x = (5 \\pm 1)/2$, giving $x = 3$ or $x = 2$. And indeed $(x-2)(x-3) = x^2 - 5x + 6$. ✓
+
+The reason I like this derivation: the formula isn't a magic incantation, it's the residue of one geometric idea. "Completing the square" is literally that — turning an L-shaped region $x^2 + bx$ into a square by adding a small corner of area $(b/2)^2$. Once you've seen the picture, the formula is impossible to forget.`,
+  },
+  {
     slug: "hello-world",
     title: "Hello, world ~",
     date: "2025-03-04",

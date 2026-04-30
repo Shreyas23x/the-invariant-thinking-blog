@@ -45,6 +45,11 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Inconsolata:wght@400;700&display=swap",
       },
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css",
+        crossOrigin: "anonymous",
+      },
       { rel: "stylesheet", href: appCss },
     ],
   }),

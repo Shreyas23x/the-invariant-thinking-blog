@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { getPost, sortedPosts } from "@/data/posts";
+import { MathParagraph } from "@/components/MathText";
+import { getPost, sortedPosts, type Post } from "@/data/posts";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -50,7 +51,7 @@ function ErrorView({ error }: { error: Error }) {
 }
 
 function PostPage() {
-  const { post } = Route.useLoaderData();
+  const { post } = Route.useLoaderData() as { post: Post };
   const all = sortedPosts();
   const idx = all.findIndex((p) => p.slug === post.slug);
   const newer = idx > 0 ? all[idx - 1] : null;
@@ -79,8 +80,8 @@ function PostPage() {
     >
       <Panel>
         <article className="space-y-3 leading-relaxed">
-          {paragraphs.map((para, i) => (
-            <p key={i}>{para}</p>
+          {paragraphs.map((para: string, i: number) => (
+            <MathParagraph key={i} text={para} />
           ))}
         </article>
       </Panel>
