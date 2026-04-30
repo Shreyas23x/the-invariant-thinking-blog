@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { sortedPosts, CATEGORIES, postsByCategory } from "@/data/posts";
+import { EditableText } from "@/components/EditableText";
+import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -22,7 +23,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const recent = sortedPosts().slice(0, 3);
+  const { posts } = usePosts();
+  const all = posts ?? [];
+  const recent = all.slice(0, 3);
 
   return (
     <SiteLayout
@@ -37,14 +40,24 @@ function Index() {
         </div>
       }
     >
-      <Panel subtitle="A logbook for the three things I think about most.">
-        <p className="leading-relaxed">
-          FoxLog is my little corner of the web. I write about three things,
-          and I try to keep them honest:
-        </p>
+      <Panel
+        subtitle={
+          <EditableText
+            contentKey="home.tagline"
+            fallback="A logbook for the three things I think about most."
+          />
+        }
+      >
+        <EditableText
+          as="p"
+          className="leading-relaxed block"
+          multiline
+          contentKey="home.intro"
+          fallback="FoxLog is my little corner of the web. I write about three things, and I try to keep them honest:"
+        />
         <ul className="mt-3 grid gap-2 sm:grid-cols-3">
           {CATEGORIES.map((cat) => {
-            const count = postsByCategory(cat).length;
+            const count = postsByCategory(all, cat).length;
             return (
               <li key={cat} className="border border-[#5266c0] bg-white p-3">
                 <div className="font-bold text-[#000055]">{cat}</div>

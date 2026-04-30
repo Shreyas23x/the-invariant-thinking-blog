@@ -1,61 +1,45 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { MathParagraph } from "@/components/MathText";
-import { getPost, sortedPosts, type Post } from "@/data/posts";
+import { usePost, usePosts } from "@/lib/usePosts";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
-    const post = getPost(params.slug);
-    if (!post) throw notFound();
-    return { post };
-  },
-  head: ({ loaderData }) => {
-    const post = loaderData?.post;
-    const title = post ? `${post.title} — ~/FoxLog` : "Post — ~/FoxLog";
-    const description = post?.excerpt ?? "A post on ~/FoxLog.";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "article" },
-      ],
-    };
-  },
-  notFoundComponent: NotFound,
-  errorComponent: ErrorView,
+  head: () => ({
+    meta: [
+      { title: "Post — ~/FoxLog" },
+      { property: "og:type", content: "article" },
+    ],
+  }),
   component: PostPage,
 });
 
-function NotFound() {
-  return (
-    <SiteLayout title="404 — post not found">
-      <Panel>
-        <p>
-          That post doesn't exist (yet?). Try the <Link to="/blog">blog index</Link>.
-        </p>
-      </Panel>
-    </SiteLayout>
-  );
-}
-
-function ErrorView({ error }: { error: Error }) {
-  return (
-    <SiteLayout title="Something went wrong">
-      <Panel>
-        <p>{error.message}</p>
-      </Panel>
-    </SiteLayout>
-  );
-}
-
 function PostPage() {
-  const { post } = Route.useLoaderData() as { post: Post };
-  const all = sortedPosts();
+  const { slug } = Route.useParams();
+  const post = usePost(slug);
+  const { posts } = usePosts();
+
+  if (post === undefined) {
+    return (
+      <SiteLayout title="Loading…">
+        <Panel><p>Loading post…</p></Panel>
+      </SiteLayout>
+    );
+  }
+
+  if (post === null) {
+    return (
+      <SiteLayout title="404 — post not found">
+        <Panel>
+          <p>That post doesn't exist (yet?). Try the <Link to="/blog">blog index</Link>.</p>
+        </Panel>
+      </SiteLayout>
+    );
+  }
+
+  const all = posts ?? [];
   const idx = all.findIndex((p) => p.slug === post.slug);
   const newer = idx > 0 ? all[idx - 1] : null;
-  const older = idx < all.length - 1 ? all[idx + 1] : null;
+  const older = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
 
   const paragraphs = post.body.split(/\n\s*\n/);
 
@@ -65,25 +49,26 @@ function PostPage() {
       sidebar={
         <div>
           <div className="otis-label text-xs">Meta</div>
-          <p className="mt-1 text-xs">
-            <b>date:</b> {post.date}
-          </p>
-          <p className="text-xs">
-            <b>category:</b> {post.category}
-          </p>
+          <p className="mt-1 text-xs"><b>date:</b> {post.date}</p>
+          <p className="text-xs"><b>category:</b> {post.category}</p>
           <div className="mt-1 flex flex-wrap gap-1">
             {post.tags.map((t) => (
-              <span key={t} className="otis-tag">
-                #{t}
-              </span>
+              <span key={t} className="otis-tag">#{t}</span>
             ))}
           </div>
         </div>
       }
     >
       <Panel>
+        {post.cover_image && (
+          <img
+            src={post.cover_image}
+            alt=""
+            className="mb-4 w-full max-h-72 object-cover border border-[#bbb]"
+          />
+        )}
         <article className="space-y-3 leading-relaxed">
-          {paragraphs.map((para: string, i: number) => (
+          {paragraphs.map((para, i) => (
             <MathParagraph key={i} text={para} />
           ))}
         </article>

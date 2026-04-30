@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { CATEGORIES, postsByCategory } from "@/data/posts";
+import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
@@ -12,16 +12,20 @@ export const Route = createFileRoute("/blog/")({
           "All posts from FoxLog, grouped by CS Projects, Math Olympiad, and NBA Analysis.",
       },
       { property: "og:title", content: "Blog — ~/FoxLog" },
-      {
-        property: "og:description",
-        content: "All posts grouped by category.",
-      },
+      { property: "og:description", content: "All posts grouped by category." },
     ],
   }),
   component: BlogIndex,
 });
 
+function slugify(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 function BlogIndex() {
+  const { posts } = usePosts();
+  const all = posts ?? [];
+
   return (
     <SiteLayout
       title="Blog"
@@ -39,7 +43,7 @@ function BlogIndex() {
       }
     >
       {CATEGORIES.map((category) => {
-        const items = postsByCategory(category);
+        const items = postsByCategory(all, category);
         return (
           <Panel key={category} title={category}>
             <a id={slugify(category)} />
@@ -94,8 +98,4 @@ function BlogIndex() {
       })}
     </SiteLayout>
   );
-}
-
-function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }

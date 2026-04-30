@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
+import { EditableText } from "@/components/EditableText";
 import { useState } from "react";
 
 export const Route = createFileRoute("/contact")({
@@ -35,7 +36,7 @@ function Contact() {
           <div className="otis-label text-xs">Direct channels</div>
           <ul className="mt-1 space-y-1 text-xs">
             <li>
-              ✉ <a href="mailto:hello@example.com">hello@example.com</a>
+              ✉ <EditableText contentKey="contact.email" fallback="hello@example.com" />
             </li>
             <li>
               ⌨{" "}
@@ -50,7 +51,14 @@ function Contact() {
         </div>
       }
     >
-      <Panel subtitle="The form is decorative for now — email is the real channel.">
+      <Panel
+        subtitle={
+          <EditableText
+            contentKey="contact.subtitle"
+            fallback="The form is decorative for now — email is the real channel."
+          />
+        }
+      >
         <form
           className="space-y-3 max-w-xl"
           onSubmit={(e) => {
