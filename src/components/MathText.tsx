@@ -1,4 +1,8 @@
-import { BlockMath, InlineMath } from "react-katex";
+import katex from "react-katex";
+const { BlockMath, InlineMath } = katex as unknown as {
+  BlockMath: React.ComponentType<{ math: string }>;
+  InlineMath: React.ComponentType<{ math: string }>;
+};
 
 // Render a text segment with **bold** and *italic* markdown.
 function renderInlineMarkdown(text: string, keyPrefix: string) {
