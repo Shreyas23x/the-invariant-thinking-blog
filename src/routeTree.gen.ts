@@ -9,12 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NbaAnalysisRouteImport } from './routes/nba-analysis'
+import { Route as MathOlympiadRouteImport } from './routes/math-olympiad'
+import { Route as CsProjectsRouteImport } from './routes/cs-projects'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
+const NbaAnalysisRoute = NbaAnalysisRouteImport.update({
+  id: '/nba-analysis',
+  path: '/nba-analysis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MathOlympiadRoute = MathOlympiadRouteImport.update({
+  id: '/math-olympiad',
+  path: '/math-olympiad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CsProjectsRoute = CsProjectsRouteImport.update({
+  id: '/cs-projects',
+  path: '/cs-projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -45,6 +63,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/cs-projects': typeof CsProjectsRoute
+  '/math-olympiad': typeof MathOlympiadRoute
+  '/nba-analysis': typeof NbaAnalysisRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
 }
@@ -52,6 +73,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/cs-projects': typeof CsProjectsRoute
+  '/math-olympiad': typeof MathOlympiadRoute
+  '/nba-analysis': typeof NbaAnalysisRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
 }
@@ -60,27 +84,79 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/cs-projects': typeof CsProjectsRoute
+  '/math-olympiad': typeof MathOlympiadRoute
+  '/nba-analysis': typeof NbaAnalysisRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/contact' | '/blog/$slug' | '/blog/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/cs-projects'
+    | '/math-olympiad'
+    | '/nba-analysis'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact' | '/blog/$slug' | '/blog'
-  id: '__root__' | '/' | '/about' | '/contact' | '/blog/$slug' | '/blog/'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/cs-projects'
+    | '/math-olympiad'
+    | '/nba-analysis'
+    | '/blog/$slug'
+    | '/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/cs-projects'
+    | '/math-olympiad'
+    | '/nba-analysis'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  CsProjectsRoute: typeof CsProjectsRoute
+  MathOlympiadRoute: typeof MathOlympiadRoute
+  NbaAnalysisRoute: typeof NbaAnalysisRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/nba-analysis': {
+      id: '/nba-analysis'
+      path: '/nba-analysis'
+      fullPath: '/nba-analysis'
+      preLoaderRoute: typeof NbaAnalysisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/math-olympiad': {
+      id: '/math-olympiad'
+      path: '/math-olympiad'
+      fullPath: '/math-olympiad'
+      preLoaderRoute: typeof MathOlympiadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cs-projects': {
+      id: '/cs-projects'
+      path: '/cs-projects'
+      fullPath: '/cs-projects'
+      preLoaderRoute: typeof CsProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -123,6 +199,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  CsProjectsRoute: CsProjectsRoute,
+  MathOlympiadRoute: MathOlympiadRoute,
+  NbaAnalysisRoute: NbaAnalysisRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
