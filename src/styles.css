@@ -5,9 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * OTIS-inspired design system.
- * Indigo header, mint content panels, light-blue accordions, dark-red labels,
- * monospace display type, rounded panels, and a soft pastel page background.
+ * OTIS-web faithful palette (from otis.css):
+ *   body        #ddeeee  pale cyan page background
+ *   #header     #5266c0 / border #2233b2  purple-blue banner, white text
+ *   #main       #72fee1  bright mint content panel
+ *   #side       #b2fee1  lighter mint sidebar
+ *   .entrywrap  #ffffff  inner white card
+ *   #navigation_box #ccccff  lavender
+ *   h1 #000055   h2 #8f008f
+ *   font: "Noto Sans", sans-serif
  */
 
 @theme inline {
@@ -16,8 +22,6 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -38,16 +42,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
 
-  --color-mint: var(--mint);
-  --color-mint-foreground: var(--mint-foreground);
-  --color-sky: var(--sky);
-  --color-sky-foreground: var(--sky-foreground);
-  --color-indigo: var(--indigo);
-  --color-indigo-foreground: var(--indigo-foreground);
-  --color-rose: var(--rose);
-  --color-label: var(--label);
+  --color-otis-header: var(--otis-header);
+  --color-otis-header-border: var(--otis-header-border);
+  --color-otis-main: var(--otis-main);
+  --color-otis-side: var(--otis-side);
+  --color-otis-nav: var(--otis-nav);
+  --color-otis-h1: var(--otis-h1);
+  --color-otis-h2: var(--otis-h2);
 
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -64,180 +66,173 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-sans: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Inconsolata", Consolas, Monaco, monospace;
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.375rem;
 
-  /* Page background — soft pale mint, like the OTIS site */
-  --background: oklch(0.965 0.025 170);
-  --foreground: oklch(0.22 0.04 260);
+  /* Exact hex values from OTIS otis.css, expressed unchanged. */
+  --background: #ddeeee;
+  --foreground: #1a1a1a;
 
-  /* Indigo header / primary brand */
-  --indigo: oklch(0.43 0.16 275);
-  --indigo-foreground: oklch(0.985 0.005 250);
+  --otis-header: #5266c0;
+  --otis-header-border: #2233b2;
+  --otis-main: #72fee1;
+  --otis-side: #b2fee1;
+  --otis-nav: #ccccff;
+  --otis-h1: #000055;
+  --otis-h2: #8f008f;
 
-  /* Mint content panel */
-  --mint: oklch(0.9 0.07 165);
-  --mint-foreground: oklch(0.22 0.05 270);
+  --primary: #5266c0;
+  --primary-foreground: #ffffff;
+  --secondary: #ccccff;
+  --secondary-foreground: #000055;
 
-  /* Sky-blue accordion bars / info boxes */
-  --sky: oklch(0.9 0.05 235);
-  --sky-foreground: oklch(0.28 0.08 270);
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
 
-  /* Rose / dark-red for form labels and accents */
-  --rose: oklch(0.45 0.18 25);
-  --label: oklch(0.42 0.19 25);
+  --muted: #e8f3f3;
+  --muted-foreground: #4a5a5a;
+  --accent: #ccccff;
+  --accent-foreground: #000055;
 
-  --primary: oklch(0.43 0.16 275);
-  --primary-foreground: oklch(0.985 0.005 250);
-  --secondary: oklch(0.9 0.07 165);
-  --secondary-foreground: oklch(0.22 0.05 270);
+  --destructive: #c0392b;
+  --destructive-foreground: #ffffff;
 
-  --card: oklch(0.995 0.005 170);
-  --card-foreground: oklch(0.22 0.04 260);
-  --popover: oklch(0.995 0.005 170);
-  --popover-foreground: oklch(0.22 0.04 260);
+  --border: #2233b2;
+  --input: #b6c3c3;
+  --ring: #5266c0;
 
-  --muted: oklch(0.94 0.02 200);
-  --muted-foreground: oklch(0.45 0.03 260);
-  --accent: oklch(0.9 0.05 235);
-  --accent-foreground: oklch(0.28 0.08 270);
+  --chart-1: #5266c0;
+  --chart-2: #72fee1;
+  --chart-3: #ccccff;
+  --chart-4: #8f008f;
+  --chart-5: #ffee77;
 
-  --destructive: oklch(0.55 0.22 27);
-  --destructive-foreground: oklch(0.985 0.005 250);
-
-  --border: oklch(0.78 0.05 200);
-  --input: oklch(0.85 0.03 200);
-  --ring: oklch(0.43 0.16 275);
-
-  --chart-1: oklch(0.43 0.16 275);
-  --chart-2: oklch(0.7 0.13 165);
-  --chart-3: oklch(0.65 0.13 235);
-  --chart-4: oklch(0.55 0.2 25);
-  --chart-5: oklch(0.7 0.15 85);
-
-  --sidebar: oklch(0.985 0.005 250);
-  --sidebar-foreground: oklch(0.22 0.04 260);
-  --sidebar-primary: oklch(0.43 0.16 275);
-  --sidebar-primary-foreground: oklch(0.985 0.005 250);
-  --sidebar-accent: oklch(0.9 0.07 165);
-  --sidebar-accent-foreground: oklch(0.22 0.05 270);
-  --sidebar-border: oklch(0.78 0.05 200);
-  --sidebar-ring: oklch(0.43 0.16 275);
+  --sidebar: #b2fee1;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #5266c0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ccccff;
+  --sidebar-accent-foreground: #000055;
+  --sidebar-border: #2233b2;
+  --sidebar-ring: #5266c0;
 }
 
 .dark {
-  --background: oklch(0.18 0.03 265);
-  --foreground: oklch(0.96 0.01 200);
-  --indigo: oklch(0.55 0.18 275);
-  --indigo-foreground: oklch(0.99 0.005 250);
-  --mint: oklch(0.32 0.06 170);
-  --mint-foreground: oklch(0.96 0.02 170);
-  --sky: oklch(0.32 0.07 240);
-  --sky-foreground: oklch(0.95 0.02 235);
-  --rose: oklch(0.7 0.18 25);
-  --label: oklch(0.72 0.18 25);
+  /* Keep the OTIS look — there is no official dark mode in OTIS. Mild dimming only. */
+  --background: #1a2a2a;
+  --foreground: #e8f3f3;
+  --otis-header: #3d4f9a;
+  --otis-header-border: #2233b2;
+  --otis-main: #1e5e54;
+  --otis-side: #266b62;
+  --otis-nav: #3a3a7a;
+  --otis-h1: #aab8ff;
+  --otis-h2: #f3a8f3;
 
-  --primary: oklch(0.55 0.18 275);
-  --primary-foreground: oklch(0.99 0.005 250);
-  --secondary: oklch(0.32 0.06 170);
-  --secondary-foreground: oklch(0.96 0.02 170);
-  --card: oklch(0.24 0.04 265);
-  --card-foreground: oklch(0.96 0.01 200);
-  --popover: oklch(0.24 0.04 265);
-  --popover-foreground: oklch(0.96 0.01 200);
-  --muted: oklch(0.28 0.03 260);
-  --muted-foreground: oklch(0.72 0.03 220);
-  --accent: oklch(0.32 0.07 240);
-  --accent-foreground: oklch(0.95 0.02 235);
-  --destructive: oklch(0.65 0.22 27);
-  --destructive-foreground: oklch(0.99 0.005 250);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 18%);
-  --ring: oklch(0.55 0.18 275);
+  --primary: #5266c0;
+  --primary-foreground: #ffffff;
+  --secondary: #3a3a7a;
+  --secondary-foreground: #ffffff;
+  --card: #243838;
+  --card-foreground: #e8f3f3;
+  --popover: #243838;
+  --popover-foreground: #e8f3f3;
+  --muted: #2c3e3e;
+  --muted-foreground: #9eb3b3;
+  --accent: #3a3a7a;
+  --accent-foreground: #e8f3f3;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #2233b2;
+  --input: #3a4f4f;
+  --ring: #5266c0;
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
   }
-  html {
-    font-family: var(--font-serif);
+  html, body {
+    font-family: var(--font-sans);
   }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-serif);
   }
-  h1, h2, h3, h4, h5, h6, .display {
-    font-family: var(--font-mono);
-    letter-spacing: -0.01em;
-  }
-  code, pre, kbd, samp {
-    font-family: var(--font-mono);
-  }
-  a {
-    color: oklch(0.5 0.18 250);
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
+  h1 { color: var(--color-otis-h1); font-weight: 700; }
+  h2 { color: var(--color-otis-h2); font-weight: 700; }
+  h3 { font-weight: normal; margin-top: 16px; }
+  code, pre, kbd, samp { font-family: var(--font-mono); }
+  a { color: #0033cc; text-decoration: none; }
+  a:hover { text-decoration: underline; }
 }
 
 @layer components {
-  .otis-panel {
-    background-color: var(--color-mint);
-    color: var(--color-mint-foreground);
-    border: 1px solid color-mix(in oklab, var(--color-mint) 70%, black 15%);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-mint) 60%, black 25%) inset;
+  /* #header — purple-blue banner, white title, thick darker-blue border */
+  .otis-header {
+    background-color: var(--color-otis-header);
+    border: 3px solid var(--color-otis-header-border);
+    color: #ffffff;
+    padding: 1rem 1.25rem;
   }
-  .otis-panel-header {
-    background-color: var(--color-indigo);
-    color: var(--color-indigo-foreground);
-    border-top-left-radius: var(--radius-xl);
-    border-top-right-radius: var(--radius-xl);
-    padding: 0.5rem 1rem;
-    font-family: var(--font-mono);
+  .otis-header h1,
+  .otis-header a h1 {
+    color: #ffffff;
+    margin: 0;
     font-weight: 700;
-    letter-spacing: 0.02em;
   }
-  .otis-card {
-    background-color: var(--color-card);
-    color: var(--color-card-foreground);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+
+  /* #main — bright mint content panel */
+  .otis-main {
+    background-color: var(--color-otis-main);
+    padding: 1rem 1.25rem;
   }
-  .otis-bar {
-    background-color: var(--color-sky);
-    color: var(--color-sky-foreground);
-    border: 1px solid color-mix(in oklab, var(--color-sky) 70%, black 18%);
-    border-radius: var(--radius-md);
-    padding: 0.5rem 0.875rem;
-    font-family: var(--font-mono);
-    font-weight: 600;
+
+  /* #side — lighter mint sidebar */
+  .otis-side {
+    background-color: var(--color-otis-side);
+    padding: 0.875rem 1rem;
+    opacity: 0.9;
+    transition: opacity 120ms ease;
   }
-  .otis-label {
-    color: var(--color-label);
-    font-weight: 700;
-    font-family: var(--font-mono);
-    letter-spacing: 0.02em;
+  .otis-side:hover { opacity: 1; }
+
+  /* .entrywrap — white inner card sitting inside #main */
+  .otis-entrywrap {
+    background-color: #ffffff;
+    padding: 1rem 1.25rem;
+    border: 1px solid #cccccc;
   }
+
+  /* #navigation_box — lavender nav strip */
+  .otis-navbox {
+    background-color: var(--color-otis-nav);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #9999cc;
+  }
+
+  /* Reusable tag / badge */
   .otis-tag {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    background-color: var(--color-sky);
-    color: var(--color-sky-foreground);
-    border: 1px solid color-mix(in oklab, var(--color-sky) 65%, black 20%);
-    border-radius: 9999px;
-    padding: 0.125rem 0.625rem;
-    font-family: var(--font-mono);
+    background-color: var(--color-otis-nav);
+    color: #000055;
+    border: 1px solid #9999cc;
+    border-radius: 4px;
+    padding: 0.125rem 0.5rem;
     font-size: 0.75rem;
     font-weight: 600;
+  }
+
+  .otis-label {
+    color: #8f008f;
+    font-weight: 700;
   }
 }

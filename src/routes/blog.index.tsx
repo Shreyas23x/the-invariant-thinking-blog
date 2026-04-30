@@ -26,54 +26,62 @@ function BlogIndex() {
   const tags = Array.from(new Set(all.flatMap((p) => p.tags))).sort();
 
   return (
-    <SiteLayout>
-      <Panel
-        title="Blog"
-        subtitle="Posts, in reverse chronological order. Tags are decorative — click them anyway."
-      >
-        <div className="mb-5 flex flex-wrap gap-2">
-          {tags.map((t) => (
-            <span key={t} className="otis-tag">
-              #{t}
-            </span>
-          ))}
+    <SiteLayout
+      title="Blog"
+      sidebar={
+        <div>
+          <div className="otis-label text-xs">Tags</div>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {tags.map((t) => (
+              <span key={t} className="otis-tag">
+                #{t}
+              </span>
+            ))}
+          </div>
         </div>
-
-        <ol className="space-y-4">
-          {all.map((p) => (
-            <li key={p.slug} className="otis-card p-4">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: p.slug }}
-                  className="font-mono font-bold text-lg"
-                >
-                  {p.title}
-                </Link>
-                <span className="font-mono text-xs text-muted-foreground">
+      }
+    >
+      <Panel subtitle="Posts, in reverse chronological order.">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b-2 border-[#5266c0] text-left">
+              <th className="py-1 pr-3">Date</th>
+              <th className="py-1 pr-3">Title</th>
+              <th className="py-1">Tags</th>
+            </tr>
+          </thead>
+          <tbody>
+            {all.map((p, i) => (
+              <tr
+                key={p.slug}
+                className={i % 2 === 0 ? "bg-[#f6fbff]" : "bg-white"}
+              >
+                <td className="py-1 pr-3 align-top font-mono text-xs whitespace-nowrap">
                   {p.date}
-                </span>
-                <div className="ml-auto flex gap-1">
-                  {p.tags.map((t) => (
-                    <span key={t} className="otis-tag">
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <p className="mt-2 leading-relaxed">{p.excerpt}</p>
-              <div className="mt-3">
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: p.slug }}
-                  className="font-mono text-sm font-semibold"
-                >
-                  read post →
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ol>
+                </td>
+                <td className="py-1 pr-3 align-top">
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: p.slug }}
+                    className="font-semibold"
+                  >
+                    {p.title}
+                  </Link>
+                  <div className="text-xs text-[#445]">{p.excerpt}</div>
+                </td>
+                <td className="py-1 align-top">
+                  <div className="flex flex-wrap gap-1">
+                    {p.tags.map((t) => (
+                      <span key={t} className="otis-tag">
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </Panel>
     </SiteLayout>
   );
