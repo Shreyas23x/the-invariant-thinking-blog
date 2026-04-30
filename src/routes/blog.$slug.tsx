@@ -29,11 +29,10 @@ export const Route = createFileRoute("/blog/$slug")({
 
 function NotFound() {
   return (
-    <SiteLayout>
-      <Panel title="404 — post not found">
+    <SiteLayout title="404 — post not found">
+      <Panel>
         <p>
-          That post doesn't exist (yet?). Try the{" "}
-          <Link to="/blog">blog index</Link>.
+          That post doesn't exist (yet?). Try the <Link to="/blog">blog index</Link>.
         </p>
       </Panel>
     </SiteLayout>
@@ -42,8 +41,8 @@ function NotFound() {
 
 function ErrorView({ error }: { error: Error }) {
   return (
-    <SiteLayout>
-      <Panel title="Something went wrong">
+    <SiteLayout title="Something went wrong">
+      <Panel>
         <p>{error.message}</p>
       </Panel>
     </SiteLayout>
@@ -60,54 +59,58 @@ function PostPage() {
   const paragraphs = post.body.split(/\n\s*\n/);
 
   return (
-    <SiteLayout>
-      <Panel title={post.title}>
-        <div className="mb-4 flex flex-wrap items-center gap-2 font-mono text-sm">
-          <span className="otis-label">date:</span>
-          <span>{post.date}</span>
-          <span className="mx-2 opacity-40">·</span>
-          {post.tags.map((t) => (
-            <span key={t} className="otis-tag">
-              #{t}
-            </span>
-          ))}
+    <SiteLayout
+      title={post.title}
+      sidebar={
+        <div>
+          <div className="otis-label text-xs">Meta</div>
+          <p className="mt-1 text-xs">
+            <b>date:</b> {post.date}
+          </p>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {post.tags.map((t) => (
+              <span key={t} className="otis-tag">
+                #{t}
+              </span>
+            ))}
+          </div>
         </div>
-
-        <article className="space-y-4 leading-relaxed text-[1.02rem]">
+      }
+    >
+      <Panel>
+        <article className="space-y-3 leading-relaxed">
           {paragraphs.map((para, i) => (
             <p key={i}>{para}</p>
           ))}
         </article>
       </Panel>
 
-      <nav className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="otis-card p-4 min-h-[5rem]">
+      <nav className="mt-3 grid gap-2 sm:grid-cols-2 text-sm">
+        <div className="border border-[#bbb] bg-[#f6fbff] p-2 min-h-[3rem]">
           {older ? (
             <Link to="/blog/$slug" params={{ slug: older.slug }}>
-              <div className="otis-label text-xs">← older</div>
-              <div className="mt-1 font-mono font-semibold">{older.title}</div>
+              <div className="text-xs text-[#557]">← older</div>
+              <div className="font-semibold">{older.title}</div>
             </Link>
           ) : (
-            <div className="otis-label text-xs opacity-50">← older</div>
+            <div className="text-xs text-[#aab]">← older</div>
           )}
         </div>
-        <div className="otis-card p-4 min-h-[5rem] sm:text-right">
+        <div className="border border-[#bbb] bg-[#f6fbff] p-2 min-h-[3rem] sm:text-right">
           {newer ? (
             <Link to="/blog/$slug" params={{ slug: newer.slug }}>
-              <div className="otis-label text-xs">newer →</div>
-              <div className="mt-1 font-mono font-semibold">{newer.title}</div>
+              <div className="text-xs text-[#557]">newer →</div>
+              <div className="font-semibold">{newer.title}</div>
             </Link>
           ) : (
-            <div className="otis-label text-xs opacity-50">newer →</div>
+            <div className="text-xs text-[#aab]">newer →</div>
           )}
         </div>
       </nav>
 
-      <div className="mt-4">
-        <Link to="/blog" className="otis-bar inline-block">
-          ← back to all posts
-        </Link>
-      </div>
+      <p className="mt-3 text-sm">
+        <Link to="/blog">← back to all posts</Link>
+      </p>
     </SiteLayout>
   );
 }
