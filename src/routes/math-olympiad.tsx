@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { postsByCategory } from "@/data/posts";
+import { usePosts, postsByCategory } from "@/lib/usePosts";
 
 export const Route = createFileRoute("/math-olympiad")({
   head: () => ({
@@ -15,7 +15,8 @@ export const Route = createFileRoute("/math-olympiad")({
 });
 
 function MathOlympiad() {
-  const posts = postsByCategory("Math Olympiad");
+  const { posts: allPosts } = usePosts();
+  const posts = postsByCategory(allPosts ?? [], "Math Olympiad");
 
   return (
     <SiteLayout

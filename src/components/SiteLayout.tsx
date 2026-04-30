@@ -1,5 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useAuth } from "@/lib/auth";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -29,6 +30,7 @@ export function SiteLayout({
   sidebar?: ReactNode;
 }) {
   const { pathname } = useLocation();
+  const { user, isAdmin, signOut } = useAuth();
 
   return (
     <div className="min-h-screen w-full">
@@ -48,10 +50,32 @@ export function SiteLayout({
         {/* #email_box — small status strip, right-aligned, like OTIS */}
         <div className="mt-2 flex justify-end text-sm">
           <div id="email_box">
-            👋, <b>visitor</b>.{" "}
-            <a className="text-[#c0392b]" href="#" onClick={(e) => e.preventDefault()}>
-              (logout)
-            </a>
+            {user ? (
+              <>
+                👋, <b>{isAdmin ? "admin" : user.email}</b>
+                {isAdmin && (
+                  <>
+                    {" · "}
+                    <Link to="/admin" className="text-[#2233b2]">admin panel</Link>
+                  </>
+                )}
+                {" · "}
+                <a
+                  className="text-[#c0392b]"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    signOut();
+                  }}
+                >
+                  (logout)
+                </a>
+              </>
+            ) : (
+              <>
+                👋, <b>visitor</b>.
+              </>
+            )}
           </div>
         </div>
 
@@ -150,7 +174,7 @@ export function Panel({
   children,
 }: {
   title?: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   children: ReactNode;
 }) {
   return (

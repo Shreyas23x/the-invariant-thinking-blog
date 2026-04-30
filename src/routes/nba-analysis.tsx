@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { postsByCategory } from "@/data/posts";
+import { usePosts, postsByCategory } from "@/lib/usePosts";
 
 export const Route = createFileRoute("/nba-analysis")({
   head: () => ({
@@ -15,7 +15,8 @@ export const Route = createFileRoute("/nba-analysis")({
 });
 
 function NBA() {
-  const items = postsByCategory("NBA Analysis");
+  const { posts } = usePosts();
+  const items = postsByCategory(posts ?? [], "NBA Analysis");
   return (
     <SiteLayout title="NBA Analysis">
       <Panel subtitle="Numbers, networks, and notes on basketball.">
