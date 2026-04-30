@@ -29,6 +29,17 @@ function renderInlineMarkdown(text: string, keyPrefix: string) {
 // Renders a paragraph with inline `$...$` and converts standalone `$$...$$` paragraphs into block math.
 export function MathParagraph({ text }: { text: string }) {
   const trimmed = text.trim();
+
+  // Image paragraph: ![alt](url)
+  const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+  if (imgMatch) {
+    return (
+      <div className="my-3">
+        <img src={imgMatch[2]} alt={imgMatch[1]} className="max-w-full border border-[#bbb]" />
+      </div>
+    );
+  }
+
   // Whole paragraph is a block formula
   const blockMatch = trimmed.match(/^\$\$([\s\S]+)\$\$$/);
   if (blockMatch) {
