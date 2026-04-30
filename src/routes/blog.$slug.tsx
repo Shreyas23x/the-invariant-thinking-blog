@@ -11,8 +11,8 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData }) => {
     const post = loaderData?.post;
-    const title = post ? `${post.title} — ~/notebook` : "Post — ~/notebook";
-    const description = post?.excerpt ?? "A post on ~/notebook.";
+    const title = post ? `${post.title} — ~/FoxLog` : "Post — ~/FoxLog";
+    const description = post?.excerpt ?? "A post on ~/FoxLog.";
     return {
       meta: [
         { title },
@@ -67,6 +67,9 @@ function PostPage() {
           <div className="otis-label text-xs">Meta</div>
           <p className="mt-1 text-xs">
             <b>date:</b> {post.date}
+          </p>
+          <p className="text-xs">
+            <b>category:</b> {post.category}
           </p>
           <div className="mt-1 flex flex-wrap gap-1">
             {post.tags.map((t) => (
