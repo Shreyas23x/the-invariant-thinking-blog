@@ -34,12 +34,15 @@ export function SiteLayout({
     <div className="min-h-screen w-full">
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
         {/* #header */}
-        <div id="header" className="otis-header">
+        <div id="header" className="otis-header relative">
           <Link to="/">
             <h1 id="sitetitle" className="text-2xl sm:text-3xl">
               𝔽(x) ~/FoxLog
             </h1>
           </Link>
+          <span className="absolute bottom-1 right-3 text-xs italic opacity-80">
+            By r3v
+          </span>
         </div>
 
         {/* #email_box — small status strip, right-aligned, like OTIS */}
