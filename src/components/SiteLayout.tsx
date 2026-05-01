@@ -1,5 +1,6 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 
 const nav = [
@@ -11,31 +12,38 @@ const nav = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
-/**
- * Faithful replication of the OTIS-web layout.html structure:
- *   .container
- *     #header       <- purple-blue banner with site title
- *     #email_box    <- top-right login/status strip
- *     #content
- *       #main       <- bright mint, contains .entry > h1#pagetitle + .entrywrap
- *       #side       <- lighter mint sidebar with #navigation_box
- */
 export function SiteLayout({
   title,
   children,
   sidebar,
+  pageTitle,
+  pageDescription,
 }: {
   title?: string;
   children: ReactNode;
   sidebar?: ReactNode;
+  pageTitle?: string;
+  pageDescription?: string;
 }) {
   const { pathname } = useLocation();
   const { user, isAdmin, signOut } = useAuth();
 
+  useEffect(() => {
+    if (pageTitle) document.title = pageTitle;
+    if (pageDescription) {
+      let m = document.querySelector('meta[name="description"]');
+      if (!m) {
+        m = document.createElement("meta");
+        m.setAttribute("name", "description");
+        document.head.appendChild(m);
+      }
+      m.setAttribute("content", pageDescription);
+    }
+  }, [pageTitle, pageDescription]);
+
   return (
     <div className="min-h-screen w-full">
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
-        {/* #header */}
         <div id="header" className="otis-header relative">
           <Link to="/">
             <h1 id="sitetitle" className="text-2xl sm:text-3xl">
@@ -47,7 +55,6 @@ export function SiteLayout({
           </span>
         </div>
 
-        {/* #email_box — small status strip, right-aligned, like OTIS */}
         <div className="mt-2 flex justify-end text-sm">
           <div id="email_box">
             {user ? (
@@ -79,7 +86,6 @@ export function SiteLayout({
           </div>
         </div>
 
-        {/* #content — main + side, like OTIS row layout */}
         <div id="content" className="mt-3 grid gap-3 md:grid-cols-12">
           <div className="md:col-span-9">
             <div id="main" className="otis-main">
@@ -93,15 +99,8 @@ export function SiteLayout({
               </div>
 
               <div className="mt-3 grid grid-cols-12 items-center text-sm">
-                <span className="col-span-8 text-left">
-                  <a
-                    className="text-[#666]"
-                    href="https://github.com/vEnhance/otis-web/issues"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Report issue or feature request
-                  </a>
+                <span className="col-span-8 text-left text-[#666]">
+                  ~ a personal logbook
                 </span>
                 <span className="col-span-4 text-right text-2xl" aria-hidden>
                   𝔼[X]
@@ -112,7 +111,6 @@ export function SiteLayout({
 
           <div className="md:col-span-3">
             <div id="side" className="otis-side">
-              {/* #navigation_box */}
               <div id="navigation_box" className="otis-navbox">
                 <div className="otis-label text-xs uppercase tracking-wide">
                   Navigation
@@ -164,10 +162,6 @@ export function SiteLayout({
   );
 }
 
-/**
- * A "section" inside the white .entrywrap — for stacking multiple
- * content blocks on one page, in the OTIS visual style.
- */
 export function Panel({
   title,
   subtitle,

@@ -1,29 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, type DbPost } from "@/lib/usePosts";
 
-export const Route = createFileRoute("/admin")({
-  head: () => ({
-    meta: [
-      { title: "Admin — ~/FoxLog" },
-      { name: "robots", content: "noindex,nofollow" },
-    ],
-  }),
-  component: AdminPage,
-});
-
-function AdminPage() {
+export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
 
   if (loading) {
     return (
-      <SiteLayout title="Admin">
-        <Panel>
-          <p>Loading…</p>
-        </Panel>
+      <SiteLayout pageTitle="Admin — ~/FoxLog" title="Admin">
+        <Panel><p>Loading…</p></Panel>
       </SiteLayout>
     );
   }
@@ -31,7 +19,7 @@ function AdminPage() {
   if (!user) return <LoginForm />;
   if (!isAdmin) {
     return (
-      <SiteLayout title="Admin">
+      <SiteLayout pageTitle="Admin — ~/FoxLog" title="Admin">
         <Panel>
           <p>You're signed in but not an admin. Contact the owner if this is wrong.</p>
         </Panel>
@@ -60,7 +48,7 @@ function LoginForm() {
   }
 
   return (
-    <SiteLayout title="Admin login">
+    <SiteLayout pageTitle="Admin login — ~/FoxLog" title="Admin login">
       <Panel
         subtitle={
           mode === "signin"
@@ -72,9 +60,7 @@ function LoginForm() {
           <div>
             <label className="otis-label block text-sm mb-1">Email</label>
             <input
-              type="email"
-              required
-              value={email}
+              type="email" required value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-[#999] bg-white px-2 py-1 text-sm"
             />
@@ -82,36 +68,26 @@ function LoginForm() {
           <div>
             <label className="otis-label block text-sm mb-1">Password</label>
             <input
-              type="password"
-              required
-              minLength={6}
-              value={password}
+              type="password" required minLength={6} value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-[#999] bg-white px-2 py-1 text-sm"
             />
           </div>
           {error && <p className="text-xs text-[#c0392b]">{error}</p>}
           <button
-            type="submit"
-            disabled={busy}
+            type="submit" disabled={busy}
             className="border-2 border-[#2233b2] bg-[#5266c0] px-4 py-1.5 text-sm font-semibold text-white"
           >
             {busy ? "…" : mode === "signin" ? "Sign in" : "Create admin account"}
           </button>
           <p className="text-xs">
             {mode === "signin" ? (
-              <>
-                No account yet?{" "}
-                <a href="#" onClick={(e) => { e.preventDefault(); setMode("signup"); }}>
-                  Sign up
-                </a>
+              <>No account yet?{" "}
+                <a href="#" onClick={(e) => { e.preventDefault(); setMode("signup"); }}>Sign up</a>
               </>
             ) : (
-              <>
-                Already have one?{" "}
-                <a href="#" onClick={(e) => { e.preventDefault(); setMode("signin"); }}>
-                  Sign in
-                </a>
+              <>Already have one?{" "}
+                <a href="#" onClick={(e) => { e.preventDefault(); setMode("signin"); }}>Sign in</a>
               </>
             )}
           </p>
@@ -134,38 +110,26 @@ function AdminDashboard() {
     setPosts((data as DbPost[]) ?? []);
   }
 
-  useEffect(() => {
-    refresh();
-  }, []);
+  useEffect(() => { refresh(); }, []);
 
   if (editing || creating) {
     return (
       <PostEditor
         post={editing}
-        onClose={() => {
-          setEditing(null);
-          setCreating(false);
-          refresh();
-        }}
+        onClose={() => { setEditing(null); setCreating(false); refresh(); }}
       />
     );
   }
 
   return (
-    <SiteLayout title="Admin panel">
-      <Panel
-        subtitle="Manage posts. Click any text on the public site to edit it inline."
-      >
+    <SiteLayout pageTitle="Admin panel — ~/FoxLog" title="Admin panel">
+      <Panel subtitle="Manage posts. Click any text on the public site to edit it inline.">
         <div className="mb-3 flex gap-2">
           <button
             onClick={() => setCreating(true)}
             className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-sm font-semibold text-white"
-          >
-            + New post
-          </button>
-          <Link to="/" className="border border-[#999] bg-white px-3 py-1 text-sm">
-            ← Back to site
-          </Link>
+          >+ New post</button>
+          <Link to="/" className="border border-[#999] bg-white px-3 py-1 text-sm">← Back to site</Link>
         </div>
 
         <table className="w-full text-sm">
@@ -187,14 +151,10 @@ function AdminDashboard() {
                   <div className="text-xs text-[#445]">/{p.slug}</div>
                 </td>
                 <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
-                <td className="py-1 pr-3 align-top text-xs">
-                  {p.published ? "✓ live" : "draft"}
-                </td>
+                <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
                 <td className="py-1 align-top text-xs space-x-2">
                   <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
-                  <Link to="/blog/$slug" params={{ slug: p.slug }} className="text-[#2233b2]">
-                    view
-                  </Link>
+                  <Link to={`/blog/${p.slug}`} className="text-[#2233b2]">view</Link>
                   <button
                     onClick={async () => {
                       if (!confirm(`Delete "${p.title}"?`)) return;
@@ -202,9 +162,7 @@ function AdminDashboard() {
                       refresh();
                     }}
                     className="text-[#c0392b]"
-                  >
-                    delete
-                  </button>
+                  >delete</button>
                 </td>
               </tr>
             ))}
@@ -237,10 +195,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
     const ext = file.name.split(".").pop();
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
     const { error } = await supabase.storage.from("post-images").upload(path, file);
-    if (error) {
-      setError(error.message);
-      return null;
-    }
+    if (error) { setError(error.message); return null; }
     const { data } = supabase.storage.from("post-images").getPublicUrl(path);
     return data.publicUrl;
   }
@@ -265,28 +220,20 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
     setError("");
     const finalSlug = slug || autoSlug(title);
     const payload = {
-      title,
-      slug: finalSlug,
-      date,
-      category,
+      title, slug: finalSlug, date, category,
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
-      excerpt,
-      body,
-      cover_image: coverImage || null,
-      published,
+      excerpt, body, cover_image: coverImage || null, published,
     };
-
     const { error } = isNew
       ? await supabase.from("posts").insert(payload)
       : await supabase.from("posts").update(payload).eq("id", post!.id);
-
     setSaving(false);
     if (error) setError(error.message);
     else onClose();
   }
 
   return (
-    <SiteLayout title={isNew ? "New post" : `Edit: ${post!.title}`}>
+    <SiteLayout pageTitle="Edit post — ~/FoxLog" title={isNew ? "New post" : `Edit: ${post!.title}`}>
       <Panel>
         <div className="space-y-3 text-sm">
           <div>
@@ -303,41 +250,22 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
           <div className="grid gap-3 sm:grid-cols-3">
             <div>
               <label className="otis-label block mb-1">Slug</label>
-              <input
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs"
-              />
+              <input value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs" />
             </div>
             <div>
               <label className="otis-label block mb-1">Date</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full border border-[#999] bg-white px-2 py-1"
-              />
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full border border-[#999] bg-white px-2 py-1" />
             </div>
             <div>
               <label className="otis-label block mb-1">Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full border border-[#999] bg-white px-2 py-1"
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
+              <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full border border-[#999] bg-white px-2 py-1">
+                {CATEGORIES.map((c) => (<option key={c}>{c}</option>))}
               </select>
             </div>
           </div>
           <div>
             <label className="otis-label block mb-1">Tags (comma-separated)</label>
-            <input
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              className="w-full border border-[#999] bg-white px-2 py-1"
-            />
+            <input value={tags} onChange={(e) => setTags(e.target.value)} className="w-full border border-[#999] bg-white px-2 py-1" />
           </div>
           <div>
             <label className="otis-label block mb-1">Cover image</label>
@@ -346,61 +274,35 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
               {coverImage && (
                 <>
                   <img src={coverImage} alt="" className="h-12 w-12 object-cover border" />
-                  <button
-                    type="button"
-                    onClick={() => setCoverImage("")}
-                    className="text-xs text-[#c0392b]"
-                  >
-                    remove
-                  </button>
+                  <button type="button" onClick={() => setCoverImage("")} className="text-xs text-[#c0392b]">remove</button>
                 </>
               )}
             </div>
           </div>
           <div>
             <label className="otis-label block mb-1">Excerpt</label>
-            <textarea
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              rows={2}
-              className="w-full border border-[#999] bg-white px-2 py-1"
-            />
+            <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="w-full border border-[#999] bg-white px-2 py-1" />
           </div>
           <div>
             <label className="otis-label block mb-1">
               Body (Markdown + LaTeX: **bold**, *italic*, $inline$, $$display$$, ![](url))
             </label>
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              rows={20}
-              className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs"
-            />
+            <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={20} className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs" />
             <div className="mt-1 text-xs">
               Insert image:{" "}
               <input type="file" accept="image/*" onChange={onInlineUpload} className="text-xs" />
             </div>
           </div>
           <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-            />
+            <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
             <span>Published (visible to visitors)</span>
           </label>
           {error && <p className="text-xs text-[#c0392b]">{error}</p>}
           <div className="flex gap-2">
-            <button
-              onClick={save}
-              disabled={saving || !title}
-              className="border-2 border-[#2233b2] bg-[#5266c0] px-4 py-1.5 font-semibold text-white"
-            >
+            <button onClick={save} disabled={saving || !title} className="border-2 border-[#2233b2] bg-[#5266c0] px-4 py-1.5 font-semibold text-white">
               {saving ? "Saving…" : "Save"}
             </button>
-            <button onClick={onClose} className="border border-[#999] bg-white px-4 py-1.5">
-              Cancel
-            </button>
+            <button onClick={onClose} className="border border-[#999] bg-white px-4 py-1.5">Cancel</button>
           </div>
         </div>
       </Panel>

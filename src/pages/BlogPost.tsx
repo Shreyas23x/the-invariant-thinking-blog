@@ -1,20 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { MathParagraph } from "@/components/MathText";
 import { usePost, usePosts } from "@/lib/usePosts";
 
-export const Route = createFileRoute("/blog/$slug")({
-  head: () => ({
-    meta: [
-      { title: "Post — ~/FoxLog" },
-      { property: "og:type", content: "article" },
-    ],
-  }),
-  component: PostPage,
-});
-
-function PostPage() {
-  const { slug } = Route.useParams();
+export default function BlogPost() {
+  const { slug = "" } = useParams();
   const post = usePost(slug);
   const { posts } = usePosts();
 
@@ -45,6 +35,8 @@ function PostPage() {
 
   return (
     <SiteLayout
+      pageTitle={`${post.title} — ~/FoxLog`}
+      pageDescription={post.excerpt}
       title={post.title}
       sidebar={
         <div>
@@ -52,48 +44,36 @@ function PostPage() {
           <p className="mt-1 text-xs"><b>date:</b> {post.date}</p>
           <p className="text-xs"><b>category:</b> {post.category}</p>
           <div className="mt-1 flex flex-wrap gap-1">
-            {post.tags.map((t) => (
-              <span key={t} className="otis-tag">#{t}</span>
-            ))}
+            {post.tags.map((t) => (<span key={t} className="otis-tag">#{t}</span>))}
           </div>
         </div>
       }
     >
       <Panel>
         {post.cover_image && (
-          <img
-            src={post.cover_image}
-            alt=""
-            className="mb-4 w-full max-h-72 object-cover border border-[#bbb]"
-          />
+          <img src={post.cover_image} alt="" className="mb-4 w-full max-h-72 object-cover border border-[#bbb]" />
         )}
         <article className="space-y-3 leading-relaxed">
-          {paragraphs.map((para, i) => (
-            <MathParagraph key={i} text={para} />
-          ))}
+          {paragraphs.map((para, i) => (<MathParagraph key={i} text={para} />))}
         </article>
       </Panel>
 
       <nav className="mt-3 grid gap-2 sm:grid-cols-2 text-sm">
         <div className="border border-[#bbb] bg-[#f6fbff] p-2 min-h-[3rem]">
           {older ? (
-            <Link to="/blog/$slug" params={{ slug: older.slug }}>
+            <Link to={`/blog/${older.slug}`}>
               <div className="text-xs text-[#557]">← older</div>
               <div className="font-semibold">{older.title}</div>
             </Link>
-          ) : (
-            <div className="text-xs text-[#aab]">← older</div>
-          )}
+          ) : (<div className="text-xs text-[#aab]">← older</div>)}
         </div>
         <div className="border border-[#bbb] bg-[#f6fbff] p-2 min-h-[3rem] sm:text-right">
           {newer ? (
-            <Link to="/blog/$slug" params={{ slug: newer.slug }}>
+            <Link to={`/blog/${newer.slug}`}>
               <div className="text-xs text-[#557]">newer →</div>
               <div className="font-semibold">{newer.title}</div>
             </Link>
-          ) : (
-            <div className="text-xs text-[#aab]">newer →</div>
-          )}
+          ) : (<div className="text-xs text-[#aab]">newer →</div>)}
         </div>
       </nav>
 

@@ -1,28 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { EditableText } from "@/components/EditableText";
 import { useState } from "react";
 
-export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — ~/notebook" },
-      {
-        name: "description",
-        content:
-          "Get in touch — email, social links, and a (frontend-only) message form.",
-      },
-      { property: "og:title", content: "Contact — ~/notebook" },
-      {
-        property: "og:description",
-        content: "Email, social links, and a small message form.",
-      },
-    ],
-  }),
-  component: Contact,
-});
-
-function Contact() {
+export default function Contact() {
   const [sent, setSent] = useState(false);
 
   const inputCls =
@@ -30,6 +10,8 @@ function Contact() {
 
   return (
     <SiteLayout
+      pageTitle="Contact — ~/FoxLog"
+      pageDescription="Get in touch — email, social links, and a (frontend-only) message form."
       title="Contact"
       sidebar={
         <div>
@@ -67,34 +49,16 @@ function Contact() {
           }}
         >
           <div>
-            <label className="otis-label block text-sm mb-1" htmlFor="name">
-              Name*
-            </label>
+            <label className="otis-label block text-sm mb-1" htmlFor="name">Name*</label>
             <input id="name" required className={inputCls} placeholder="Your name" />
           </div>
           <div>
-            <label className="otis-label block text-sm mb-1" htmlFor="email">
-              Email*
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              className={inputCls}
-              placeholder="you@example.com"
-            />
+            <label className="otis-label block text-sm mb-1" htmlFor="email">Email*</label>
+            <input id="email" type="email" required className={inputCls} placeholder="you@example.com" />
           </div>
           <div>
-            <label className="otis-label block text-sm mb-1" htmlFor="message">
-              Message*
-            </label>
-            <textarea
-              id="message"
-              rows={5}
-              required
-              className={inputCls}
-              placeholder="Say hi…"
-            />
+            <label className="otis-label block text-sm mb-1" htmlFor="message">Message*</label>
+            <textarea id="message" rows={5} required className={inputCls} placeholder="Say hi…" />
           </div>
           <button
             type="submit"

@@ -1,34 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { EditableText } from "@/components/EditableText";
 import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
+import { Link } from "react-router-dom";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "~/FoxLog — CS, Math Olympiad & NBA Analysis" },
-      {
-        name: "description",
-        content:
-          "FoxLog: a personal blog on CS projects, math olympiad problems, and NBA analysis.",
-      },
-      { property: "og:title", content: "~/FoxLog" },
-      {
-        property: "og:description",
-        content: "CS projects, math olympiad problems, and NBA analysis.",
-      },
-    ],
-  }),
-  component: Index,
-});
-
-function Index() {
+export default function Index() {
   const { posts } = usePosts();
   const all = posts ?? [];
   const recent = all.slice(0, 3);
 
   return (
     <SiteLayout
+      pageTitle="~/FoxLog — CS, Math Olympiad & NBA Analysis"
+      pageDescription="A personal blog on CS projects, math olympiad problems, and NBA analysis."
       title="Welcome to FoxLog"
       sidebar={
         <div>
@@ -79,11 +62,7 @@ function Index() {
           {recent.map((p) => (
             <li key={p.slug} className="py-2 first:pt-0 last:pb-0">
               <div className="flex flex-wrap items-baseline gap-x-3">
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: p.slug }}
-                  className="font-semibold"
-                >
+                <Link to={`/blog/${p.slug}`} className="font-semibold">
                   {p.title}
                 </Link>
                 <span className="font-mono text-xs text-[#557]">{p.date}</span>

@@ -1,25 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { usePosts, postsByCategory } from "@/lib/usePosts";
 
-export const Route = createFileRoute("/cs-projects")({
-  head: () => ({
-    meta: [
-      { title: "CS Projects — ~/FoxLog" },
-      { name: "description", content: "Posts and notes from CS projects I'm shipping or breaking." },
-      { property: "og:title", content: "CS Projects — ~/FoxLog" },
-      { property: "og:description", content: "CS projects: posts, notes, write-ups." },
-    ],
-  }),
-  component: CSProjects,
-});
-
-function CSProjects() {
+export default function NBAAnalysis() {
   const { posts } = usePosts();
-  const items = postsByCategory(posts ?? [], "CS Projects");
+  const items = postsByCategory(posts ?? [], "NBA Analysis");
   return (
-    <SiteLayout title="CS Projects">
-      <Panel subtitle="Write-ups, experiments, and tiny tools I keep rewriting.">
+    <SiteLayout pageTitle="NBA Analysis — ~/FoxLog" title="NBA Analysis">
+      <Panel subtitle="Numbers, networks, and notes on basketball.">
         {items.length === 0 ? (
           <p className="text-sm italic text-[#445]">Nothing here yet — coming soon.</p>
         ) : (
@@ -36,16 +24,12 @@ function CSProjects() {
                 <tr key={p.slug} className={i % 2 === 0 ? "bg-[#f6fbff]" : "bg-white"}>
                   <td className="py-1 pr-3 align-top font-mono text-xs whitespace-nowrap">{p.date}</td>
                   <td className="py-1 pr-3 align-top">
-                    <Link to="/blog/$slug" params={{ slug: p.slug }} className="font-semibold">
-                      {p.title}
-                    </Link>
+                    <Link to={`/blog/${p.slug}`} className="font-semibold">{p.title}</Link>
                     <div className="text-xs text-[#445]">{p.excerpt}</div>
                   </td>
                   <td className="py-1 align-top">
                     <div className="flex flex-wrap gap-1">
-                      {p.tags.map((t) => (
-                        <span key={t} className="otis-tag">#{t}</span>
-                      ))}
+                      {p.tags.map((t) => (<span key={t} className="otis-tag">#{t}</span>))}
                     </div>
                   </td>
                 </tr>

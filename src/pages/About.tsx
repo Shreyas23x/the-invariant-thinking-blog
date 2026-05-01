@@ -1,22 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { EditableText } from "@/components/EditableText";
 
-export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About — ~/FoxLog" },
-      { name: "description", content: "About me: a short bio." },
-      { property: "og:title", content: "About — ~/FoxLog" },
-      { property: "og:description", content: "A short bio." },
-    ],
-  }),
-  component: About,
-});
-
-function About() {
+export default function About() {
   return (
     <SiteLayout
+      pageTitle="About — ~/FoxLog"
+      pageDescription="About me: a short bio."
       title="About"
       sidebar={
         <div>
