@@ -236,3 +236,34 @@
     font-weight: 700;
   }
 }
+
+/*
+ * Math font override — closest web equivalent to newtxmath (Times-based
+ * serif math) is STIX Two Math + STIX Two Text. Both metrics-match Times
+ * and ship as proper math-aware OpenType fonts.
+ *
+ * KaTeX assigns fonts via .katex .{mathnormal, mathit, mathbf, ...} classes.
+ * We retarget those classes inside `.math-newtx` to STIX Two Math/Text,
+ * leaving KaTeX's own DOM and metrics untouched.
+ */
+.math-newtx .katex {
+  font-family: "STIX Two Math", "STIX Two Text", "Times New Roman", serif;
+}
+.math-newtx .katex .mathnormal,
+.math-newtx .katex .mathit {
+  font-family: "STIX Two Text", "Times New Roman", serif;
+  font-style: italic;
+}
+.math-newtx .katex .mathrm,
+.math-newtx .katex .mord {
+  font-family: "STIX Two Text", "Times New Roman", serif;
+}
+.math-newtx .katex .mathbf {
+  font-family: "STIX Two Text", "Times New Roman", serif;
+  font-weight: 700;
+}
+.math-newtx .katex .mathbb,
+.math-newtx .katex .amsrm {
+  /* mathbb (blackboard bold) — keep KaTeX's AMS font, STIX doesn't ship one */
+  font-family: KaTeX_AMS, "STIX Two Math", serif;
+}
