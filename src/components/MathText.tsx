@@ -1,9 +1,39 @@
 import { BlockMath, InlineMath } from "react-katex";
+import "katex/contrib/mhchem"; // enables \ce{...} chemistry equations
 
-// Render a text segment with **bold** and *italic* markdown.
+// Macros that mimic common LaTeX packages: physics, cancel, color, etc.
+// KaTeX supports a `macros` option per render. We define a shared set.
+const KATEX_MACROS: Record<string, string> = {
+  // physics package essentials
+  "\\bra": "\\left\\langle #1 \\right|",
+  "\\ket": "\\left| #1 \\right\\rangle",
+  "\\braket": "\\left\\langle #1 \\middle| #2 \\right\\rangle",
+  "\\abs": "\\left| #1 \\right|",
+  "\\norm": "\\left\\| #1 \\right\\|",
+  "\\dv": "\\frac{d #1}{d #2}",
+  "\\pdv": "\\frac{\\partial #1}{\\partial #2}",
+  "\\dd": "\\,d",
+  "\\eval": "\\left. #1 \\right|",
+  // common shortcuts
+  "\\RR": "\\mathbb{R}",
+  "\\NN": "\\mathbb{N}",
+  "\\ZZ": "\\mathbb{Z}",
+  "\\QQ": "\\mathbb{Q}",
+  "\\CC": "\\mathbb{C}",
+  "\\FF": "\\mathbb{F}",
+  "\\eps": "\\varepsilon",
+  // cancel-like (KaTeX has \cancel built-in)
+};
+
+const KATEX_OPTS = {
+  macros: KATEX_MACROS,
+  trust: true,
+  strict: false as const,
+  throwOnError: false,
+};
+
 function renderInlineMarkdown(text: string, keyPrefix: string) {
   const nodes: React.ReactNode[] = [];
-  // Match **bold** first, then *italic*
   const re = /(\*\*([^*\n]+)\*\*)|(\*([^*\n]+)\*)/g;
   let last = 0;
   let m: RegExpExecArray | null;
@@ -22,11 +52,9 @@ function renderInlineMarkdown(text: string, keyPrefix: string) {
   return nodes;
 }
 
-// Renders a paragraph with inline `$...$` and converts standalone `$$...$$` paragraphs into block math.
 export function MathParagraph({ text }: { text: string }) {
   const trimmed = text.trim();
 
-  // Image paragraph: ![alt](url)
   const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
   if (imgMatch) {
     return (
@@ -36,17 +64,15 @@ export function MathParagraph({ text }: { text: string }) {
     );
   }
 
-  // Whole paragraph is a block formula
   const blockMatch = trimmed.match(/^\$\$([\s\S]+)\$\$$/);
   if (blockMatch) {
     return (
-      <div className="my-2 overflow-x-auto">
-        <BlockMath math={blockMatch[1].trim()} />
+      <div className="my-2 overflow-x-auto math-newtx">
+        <BlockMath math={blockMatch[1].trim()} settings={KATEX_OPTS} />
       </div>
     );
   }
 
-  // Split on inline $...$
   const parts: Array<{ type: "text" | "math"; value: string }> = [];
   const re = /\$([^$\n]+)\$/g;
   let last = 0;
@@ -62,7 +88,9 @@ export function MathParagraph({ text }: { text: string }) {
     <p>
       {parts.map((p, i) =>
         p.type === "math" ? (
-          <InlineMath key={i} math={p.value} />
+          <span key={i} className="math-newtx">
+            <InlineMath math={p.value} settings={KATEX_OPTS} />
+          </span>
         ) : (
           <span key={i}>{renderInlineMarkdown(p.value, `p${i}`)}</span>
         ),
