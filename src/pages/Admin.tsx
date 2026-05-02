@@ -285,10 +285,29 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
             <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="w-full border border-[#999] bg-white px-2 py-1" />
           </div>
           <div>
-            <label className="otis-label block mb-1">
-              Body (Markdown + LaTeX: **bold**, *italic*, $inline$, $$display$$, ![](url))
-            </label>
-            <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={20} className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs" />
+            <div className="flex items-center justify-between mb-1">
+              <label className="otis-label">Body</label>
+              <span className="text-[11px] text-[#445]">
+                **bold** · *italic* · $inline$ · $$display$$ · [text](url) · ![](img-url) ·
+                {" :::center :::"} · {":::right :::"} · {':::hide title="reveal" :::'}
+              </span>
+            </div>
+            <div className="grid gap-2 lg:grid-cols-2">
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                rows={22}
+                className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs"
+              />
+              <div className="border border-[#999] bg-white p-3 text-sm overflow-auto max-h-[28rem]">
+                <div className="otis-label text-xs mb-2">Live preview</div>
+                {body.trim() ? (
+                  <MathBody body={body} />
+                ) : (
+                  <p className="text-xs italic text-[#445]">Start typing to see a preview…</p>
+                )}
+              </div>
+            </div>
             <div className="mt-1 text-xs">
               Insert image:{" "}
               <input type="file" accept="image/*" onChange={onInlineUpload} className="text-xs" />
@@ -296,7 +315,10 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
           </div>
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
-            <span>Published (visible to visitors)</span>
+            <span>
+              <b>{published ? "Public" : "Private (draft)"}</b> —{" "}
+              {published ? "visible to all visitors" : "only you can see it"}
+            </span>
           </label>
           {error && <p className="text-xs text-[#c0392b]">{error}</p>}
           <div className="flex gap-2">
