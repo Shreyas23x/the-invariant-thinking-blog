@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
-import { MathParagraph } from "@/components/MathText";
+import { MathBody } from "@/components/MathText";
 import { usePost, usePosts } from "@/lib/usePosts";
 
 export default function BlogPost() {
@@ -31,8 +31,6 @@ export default function BlogPost() {
   const newer = idx > 0 ? all[idx - 1] : null;
   const older = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
 
-  const paragraphs = post.body.split(/\n\s*\n/);
-
   return (
     <SiteLayout
       pageTitle={`${post.title} — ~/FoxLog`}
@@ -51,10 +49,14 @@ export default function BlogPost() {
     >
       <Panel>
         {post.cover_image && (
-          <img src={post.cover_image} alt="" className="mb-4 w-full max-h-72 object-cover border border-[#bbb]" />
+          <img
+            src={post.cover_image}
+            alt=""
+            className="mb-4 w-full max-h-96 object-contain bg-[#f6fbff] border border-[#bbb]"
+          />
         )}
-        <article className="space-y-3 leading-relaxed">
-          {paragraphs.map((para, i) => (<MathParagraph key={i} text={para} />))}
+        <article>
+          <MathBody body={post.body} />
         </article>
       </Panel>
 
