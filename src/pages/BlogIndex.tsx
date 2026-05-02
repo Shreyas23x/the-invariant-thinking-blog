@@ -12,7 +12,7 @@ export default function BlogIndex() {
 
   return (
     <SiteLayout
-      pageTitle="Blog — ~/FoxLog"
+      pageTitle="Blog — Invariant Thinking"
       title="Blog"
       sidebar={
         <div>

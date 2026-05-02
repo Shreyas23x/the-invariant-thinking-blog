@@ -11,7 +11,7 @@ export default function Admin() {
 
   if (loading) {
     return (
-      <SiteLayout pageTitle="Admin — ~/FoxLog" title="Admin">
+      <SiteLayout pageTitle="Admin — Invariant Thinking" title="Admin">
         <Panel><p>Loading…</p></Panel>
       </SiteLayout>
     );
@@ -20,7 +20,7 @@ export default function Admin() {
   if (!user) return <LoginForm />;
   if (!isAdmin) {
     return (
-      <SiteLayout pageTitle="Admin — ~/FoxLog" title="Admin">
+      <SiteLayout pageTitle="Admin — Invariant Thinking" title="Admin">
         <Panel>
           <p>You're signed in but not an admin. Contact the owner if this is wrong.</p>
         </Panel>
@@ -49,7 +49,7 @@ function LoginForm() {
   }
 
   return (
-    <SiteLayout pageTitle="Admin login — ~/FoxLog" title="Admin login">
+    <SiteLayout pageTitle="Admin login — Invariant Thinking" title="Admin login">
       <Panel
         subtitle={
           mode === "signin"
@@ -123,7 +123,7 @@ function AdminDashboard() {
   }
 
   return (
-    <SiteLayout pageTitle="Admin panel — ~/FoxLog" title="Admin panel">
+    <SiteLayout pageTitle="Admin panel — Invariant Thinking" title="Admin panel">
       <Panel subtitle="Manage posts. Click any text on the public site to edit it inline.">
         <div className="mb-3 flex gap-2">
           <button
@@ -186,6 +186,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
   const [coverImage, setCoverImage] = useState(post?.cover_image ?? "");
   const [published, setPublished] = useState(post?.published ?? true);
   const [saving, setSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [error, setError] = useState("");
 
   function autoSlug(t: string) {
@@ -234,7 +235,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
   }
 
   return (
-    <SiteLayout pageTitle="Edit post — ~/FoxLog" title={isNew ? "New post" : `Edit: ${post!.title}`}>
+    <SiteLayout pageTitle="Edit post — Invariant Thinking" title={isNew ? "New post" : `Edit: ${post!.title}`}>
       <Panel>
         <div className="space-y-3 text-sm">
           <div>
@@ -285,34 +286,59 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
             <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="w-full border border-[#999] bg-white px-2 py-1" />
           </div>
           <div>
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-1 gap-2 flex-wrap">
               <label className="otis-label">Body</label>
-              <span className="text-[11px] text-[#445]">
-                **bold** · *italic* · $inline$ · $$display$$ · [text](url) · ![](img-url) ·
-                {" :::center :::"} · {":::right :::"} · {':::hide title="reveal" :::'}
-              </span>
-            </div>
-            <div className="grid gap-2 lg:grid-cols-2">
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                rows={22}
-                className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs"
-              />
-              <div className="border border-[#999] bg-white p-3 text-sm overflow-auto max-h-[28rem]">
-                <div className="otis-label text-xs mb-2">Live preview</div>
-                {body.trim() ? (
-                  <MathBody body={body} />
-                ) : (
-                  <p className="text-xs italic text-[#445]">Start typing to see a preview…</p>
-                )}
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] text-[#445]">
+                  **bold** · *italic* · $inline$ · $$display$$ · [text](url) · ![](img-url) ·
+                  {" :::center :::"} · {":::right :::"} · {':::hide title="reveal" :::'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowPreview(true)}
+                  className="border border-[#2233b2] bg-white px-2 py-0.5 text-xs font-semibold text-[#2233b2] whitespace-nowrap"
+                >
+                  👁 Preview
+                </button>
               </div>
             </div>
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={22}
+              className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs"
+            />
             <div className="mt-1 text-xs">
               Insert image:{" "}
               <input type="file" accept="image/*" onChange={onInlineUpload} className="text-xs" />
             </div>
           </div>
+          {showPreview && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+              onClick={() => setShowPreview(false)}
+            >
+              <div
+                className="bg-white border-2 border-[#2233b2] max-w-4xl w-full max-h-[90vh] overflow-auto p-5"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-3 sticky top-0 bg-white pb-2 border-b border-[#ddd]">
+                  <div className="otis-label text-sm">Live preview — {title || "(untitled)"}</div>
+                  <button
+                    onClick={() => setShowPreview(false)}
+                    className="border border-[#999] bg-white px-3 py-1 text-xs"
+                  >
+                    Close ✕
+                  </button>
+                </div>
+                {body.trim() ? (
+                  <MathBody body={body} />
+                ) : (
+                  <p className="text-xs italic text-[#445]">Nothing to preview yet…</p>
+                )}
+              </div>
+            </div>
+          )}
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
             <span>

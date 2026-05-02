@@ -10,7 +10,7 @@ export default function Contact() {
 
   return (
     <SiteLayout
-      pageTitle="Contact — ~/FoxLog"
+      pageTitle="Contact — Invariant Thinking"
       pageDescription="Get in touch — email, social links, and a (frontend-only) message form."
       title="Contact"
       sidebar={

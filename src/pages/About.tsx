@@ -4,7 +4,7 @@ import { EditableText } from "@/components/EditableText";
 export default function About() {
   return (
     <SiteLayout
-      pageTitle="About — ~/FoxLog"
+      pageTitle="About — Invariant Thinking"
       pageDescription="About me: a short bio."
       title="About"
       sidebar={

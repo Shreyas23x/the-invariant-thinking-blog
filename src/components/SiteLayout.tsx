@@ -47,7 +47,7 @@ export function SiteLayout({
         <div id="header" className="otis-header relative">
           <Link to="/">
             <h1 id="sitetitle" className="text-2xl sm:text-3xl">
-              𝔽(x) ~/FoxLog
+              Invariant Thinking
             </h1>
           </Link>
           <span className="absolute bottom-1 right-3 text-xs italic opacity-80">
@@ -156,6 +156,13 @@ export function SiteLayout({
 
         <footer className="mt-6 mb-4 text-center text-xs text-[#557]">
           © {new Date().getFullYear()} — handcrafted with semicolons & tea
+          <div className="mt-1">
+            Theme inspired by{" "}
+            <a href="https://web.evanchen.cc/" target="_blank" rel="noreferrer">
+              Evan Chen's OTIS
+            </a>
+            .
+          </div>
         </footer>
       </div>
     </div>

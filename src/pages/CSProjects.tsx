@@ -6,7 +6,7 @@ export default function CSProjects() {
   const { posts } = usePosts();
   const items = postsByCategory(posts ?? [], "CS Projects");
   return (
-    <SiteLayout pageTitle="CS Projects — ~/FoxLog" title="CS Projects">
+    <SiteLayout pageTitle="CS Projects — Invariant Thinking" title="CS Projects">
       <Panel subtitle="Write-ups, experiments, and tiny tools I keep rewriting.">
         {items.length === 0 ? (
           <p className="text-sm italic text-[#445]">Nothing here yet — coming soon.</p>
