@@ -186,6 +186,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
   const [coverImage, setCoverImage] = useState(post?.cover_image ?? "");
   const [published, setPublished] = useState(post?.published ?? true);
   const [saving, setSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [error, setError] = useState("");
 
   function autoSlug(t: string) {
