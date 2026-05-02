@@ -43,7 +43,10 @@ export function usePost(slug: string) {
       .select("*")
       .eq("slug", slug)
       .maybeSingle()
-      .then(({ data }) => setPost((data as DbPost) ?? null));
+      .then(({ data }) => {
+        const p = (data as DbPost) ?? null;
+        setPost(p);
+      });
   }, [slug]);
   return post;
 }
