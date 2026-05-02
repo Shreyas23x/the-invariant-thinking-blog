@@ -4,6 +4,7 @@ import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, type DbPost } from "@/lib/usePosts";
+import { MathBody } from "@/components/MathText";
 
 export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
