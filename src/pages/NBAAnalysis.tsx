@@ -6,7 +6,7 @@ export default function NBAAnalysis() {
   const { posts } = usePosts();
   const items = postsByCategory(posts ?? [], "NBA Analysis");
   return (
-    <SiteLayout pageTitle="NBA Analysis — ~/FoxLog" title="NBA Analysis">
+    <SiteLayout pageTitle="NBA Analysis — Invariant Thinking" title="NBA Analysis">
       <Panel subtitle="Numbers, networks, and notes on basketball.">
         {items.length === 0 ? (
           <p className="text-sm italic text-[#445]">Nothing here yet — coming soon.</p>

@@ -11,7 +11,7 @@ export default function Admin() {
 
   if (loading) {
     return (
-      <SiteLayout pageTitle="Admin — ~/FoxLog" title="Admin">
+      <SiteLayout pageTitle="Admin — Invariant Thinking" title="Admin">
         <Panel><p>Loading…</p></Panel>
       </SiteLayout>
     );
@@ -20,7 +20,7 @@ export default function Admin() {
   if (!user) return <LoginForm />;
   if (!isAdmin) {
     return (
-      <SiteLayout pageTitle="Admin — ~/FoxLog" title="Admin">
+      <SiteLayout pageTitle="Admin — Invariant Thinking" title="Admin">
         <Panel>
           <p>You're signed in but not an admin. Contact the owner if this is wrong.</p>
         </Panel>
@@ -49,7 +49,7 @@ function LoginForm() {
   }
 
   return (
-    <SiteLayout pageTitle="Admin login — ~/FoxLog" title="Admin login">
+    <SiteLayout pageTitle="Admin login — Invariant Thinking" title="Admin login">
       <Panel
         subtitle={
           mode === "signin"
@@ -123,7 +123,7 @@ function AdminDashboard() {
   }
 
   return (
-    <SiteLayout pageTitle="Admin panel — ~/FoxLog" title="Admin panel">
+    <SiteLayout pageTitle="Admin panel — Invariant Thinking" title="Admin panel">
       <Panel subtitle="Manage posts. Click any text on the public site to edit it inline.">
         <div className="mb-3 flex gap-2">
           <button
@@ -234,7 +234,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
   }
 
   return (
-    <SiteLayout pageTitle="Edit post — ~/FoxLog" title={isNew ? "New post" : `Edit: ${post!.title}`}>
+    <SiteLayout pageTitle="Edit post — Invariant Thinking" title={isNew ? "New post" : `Edit: ${post!.title}`}>
       <Panel>
         <div className="space-y-3 text-sm">
           <div>

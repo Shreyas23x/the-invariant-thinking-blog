@@ -62,8 +62,8 @@ The reason I like this derivation: the formula isn't a magic incantation, it's t
     category: "CS Projects",
     tags: ["meta", "intro"],
     excerpt:
-      "A first post. Why I'm starting FoxLog, and what you can expect to find inside.",
-    body: `Welcome to FoxLog! This little site is my personal logbook — somewhere between a blog, a wiki, and a scratchpad.
+      "A first post. Why I'm starting Invariant Thinking, and what you can expect to find inside.",
+    body: `Welcome to Invariant Thinking! This little site is my personal logbook — somewhere between a blog, a wiki, and a scratchpad.
 
 I plan to write about three things, mostly: CS projects I'm shipping (or breaking), math olympiad problems I'm chewing on, and NBA analysis when the numbers get interesting.
 

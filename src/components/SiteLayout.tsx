@@ -47,7 +47,7 @@ export function SiteLayout({
         <div id="header" className="otis-header relative">
           <Link to="/">
             <h1 id="sitetitle" className="text-2xl sm:text-3xl">
-              𝔽(x) ~/FoxLog
+              𝔽(x) Invariant Thinking
             </h1>
           </Link>
           <span className="absolute bottom-1 right-3 text-xs italic opacity-80">

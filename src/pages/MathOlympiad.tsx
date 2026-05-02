@@ -8,7 +8,7 @@ export default function MathOlympiad() {
 
   return (
     <SiteLayout
-      pageTitle="Math Olympiad — ~/FoxLog"
+      pageTitle="Math Olympiad — Invariant Thinking"
       title="Math Olympiad"
       sidebar={
         <div>

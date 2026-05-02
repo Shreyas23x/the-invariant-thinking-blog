@@ -10,9 +10,9 @@ export default function Index() {
 
   return (
     <SiteLayout
-      pageTitle="~/FoxLog — CS, Math Olympiad & NBA Analysis"
+      pageTitle="Invariant Thinking — CS, Math Olympiad & NBA Analysis"
       pageDescription="A personal blog on CS projects, math olympiad problems, and NBA analysis."
-      title="Welcome to FoxLog"
+      title="Welcome to Invariant Thinking"
       sidebar={
         <div>
           <div className="otis-label text-xs">Status</div>
@@ -36,7 +36,7 @@ export default function Index() {
           className="leading-relaxed block"
           multiline
           contentKey="home.intro"
-          fallback="FoxLog is my little corner of the web. I write about three things, and I try to keep them honest:"
+          fallback="Invariant Thinking is my little corner of the web. I write about three things, and I try to keep them honest:"
         />
         <ul className="mt-3 grid gap-2 sm:grid-cols-3">
           {CATEGORIES.map((cat) => {

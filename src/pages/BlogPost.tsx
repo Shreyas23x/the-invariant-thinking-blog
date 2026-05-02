@@ -33,7 +33,7 @@ export default function BlogPost() {
 
   return (
     <SiteLayout
-      pageTitle={`${post.title} — ~/FoxLog`}
+      pageTitle={`${post.title} — Invariant Thinking`}
       pageDescription={post.excerpt}
       title={post.title}
       sidebar={
