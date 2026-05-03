@@ -180,10 +180,6 @@ function SiteFooter() {
     </footer>
   );
 }
-      </div>
-    </div>
-  );
-}
 
 export function Panel({
   title,
