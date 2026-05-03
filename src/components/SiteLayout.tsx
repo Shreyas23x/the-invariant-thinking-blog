@@ -156,16 +156,35 @@ export function SiteLayout({
           </div>
         </div>
 
-        <footer className="mt-6 mb-4 text-center text-xs text-[#557]">
-          © {new Date().getFullYear()} — handcrafted with semicolons & tea
-          <div className="mt-1">
-            Theme inspired by{" "}
-            <a href="https://web.evanchen.cc/" target="_blank" rel="noreferrer">
-              Evan Chen's OTIS
-            </a>
-            .
-          </div>
-        </footer>
+        <SiteFooter />
+      </div>
+    </div>
+  );
+}
+
+function SiteFooter() {
+  const views = useSiteViews();
+  return (
+    <footer className="mt-6 mb-4 text-center text-xs text-[#557]">
+      © {new Date().getFullYear()} — handcrafted with semicolons & tea
+      <div className="mt-1">
+        Theme inspired by{" "}
+        <a href="https://web.evanchen.cc/" target="_blank" rel="noreferrer">
+          Evan Chen's OTIS
+        </a>
+        .
+      </div>
+      <div className="mt-1 font-mono">
+        ★ total site views: {views === null ? "…" : views.toLocaleString()}
+      </div>
+    </footer>
+  );
+}
+
+function _trailing_dummy() {
+  return null;
+}
+{/* close ends */}
       </div>
     </div>
   );
