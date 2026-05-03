@@ -169,8 +169,44 @@
   h2 { color: var(--color-otis-h2); font-weight: 700; }
   h3 { font-weight: normal; margin-top: 16px; }
   code, pre, kbd, samp { font-family: var(--font-mono); }
-  a { color: #0033cc; text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  /* OTIS link colors: bright blue for unvisited, purple for visited */
+  a { color: #0000ee; text-decoration: none; }
+  a:visited { color: #551a8b; }
+  a:hover { text-decoration: underline; color: #2233b2; }
+}
+
+@layer components {
+  /* Blog card hover lift effect */
+  .blog-card {
+    position: relative;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+    overflow: hidden;
+  }
+  .blog-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--card-bg, none);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+  .blog-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px -6px rgba(34, 51, 178, 0.35);
+  }
+  .blog-card:hover::before { opacity: 0.18; }
+  .blog-card > * { position: relative; z-index: 1; }
+
+  /* Topic backgrounds — applied to entrywrap on tagged posts */
+  .topic-bg {
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: lighten;
+  }
 }
 
 @layer components {
