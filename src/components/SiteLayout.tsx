@@ -180,11 +180,6 @@ function SiteFooter() {
     </footer>
   );
 }
-
-function _trailing_dummy() {
-  return null;
-}
-{/* close ends */}
       </div>
     </div>
   );
