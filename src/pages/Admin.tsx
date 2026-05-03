@@ -122,53 +122,71 @@ function AdminDashboard() {
     );
   }
 
+  const [tab, setTab] = useState<"posts" | "journal" | "questions">("posts");
+
   return (
     <SiteLayout pageTitle="Admin panel — Invariant Thinking" title="Admin panel">
-      <Panel subtitle="Manage posts. Click any text on the public site to edit it inline.">
-        <div className="mb-3 flex gap-2">
-          <button
-            onClick={() => setCreating(true)}
-            className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-sm font-semibold text-white"
-          >+ New post</button>
+      <Panel subtitle="Manage posts, journal entries, and math questions.">
+        <div className="mb-3 flex gap-2 flex-wrap">
           <Link to="/" className="border border-[#999] bg-white px-3 py-1 text-sm">← Back to site</Link>
+          {(["posts","journal","questions"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`border px-3 py-1 text-sm ${tab===t ? "border-[#2233b2] bg-[#5266c0] text-white font-semibold" : "border-[#999] bg-white"}`}
+            >{t}</button>
+          ))}
         </div>
 
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b-2 border-[#5266c0] text-left">
-              <th className="py-1 pr-3">Date</th>
-              <th className="py-1 pr-3">Title</th>
-              <th className="py-1 pr-3">Category</th>
-              <th className="py-1 pr-3">Status</th>
-              <th className="py-1">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((p, i) => (
-              <tr key={p.id} className={i % 2 === 0 ? "bg-[#f6fbff]" : "bg-white"}>
-                <td className="py-1 pr-3 align-top font-mono text-xs">{p.date}</td>
-                <td className="py-1 pr-3 align-top">
-                  <div className="font-semibold">{p.title}</div>
-                  <div className="text-xs text-[#445]">/{p.slug}</div>
-                </td>
-                <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
-                <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
-                <td className="py-1 align-top text-xs space-x-2">
-                  <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
-                  <Link to={`/blog/${p.slug}`} className="text-[#2233b2]">view</Link>
-                  <button
-                    onClick={async () => {
-                      if (!confirm(`Delete "${p.title}"?`)) return;
-                      await supabase.from("posts").delete().eq("id", p.id);
-                      refresh();
-                    }}
-                    className="text-[#c0392b]"
-                  >delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {tab === "posts" && (
+          <>
+            <div className="mb-3">
+              <button
+                onClick={() => setCreating(true)}
+                className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-sm font-semibold text-white"
+              >+ New post</button>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b-2 border-[#5266c0] text-left">
+                  <th className="py-1 pr-3">Date</th>
+                  <th className="py-1 pr-3">Title</th>
+                  <th className="py-1 pr-3">Category</th>
+                  <th className="py-1 pr-3">Status</th>
+                  <th className="py-1">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map((p, i) => (
+                  <tr key={p.id} className={i % 2 === 0 ? "bg-[#f6fbff]" : "bg-white"}>
+                    <td className="py-1 pr-3 align-top font-mono text-xs">{p.date}</td>
+                    <td className="py-1 pr-3 align-top">
+                      <div className="font-semibold">{p.title}</div>
+                      <div className="text-xs text-[#445]">/{p.slug}</div>
+                    </td>
+                    <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
+                    <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
+                    <td className="py-1 align-top text-xs space-x-2">
+                      <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
+                      <Link to={`/blog/${p.slug}`} className="text-[#2233b2]">view</Link>
+                      <button
+                        onClick={async () => {
+                          if (!confirm(`Delete "${p.title}"?`)) return;
+                          await supabase.from("posts").delete().eq("id", p.id);
+                          refresh();
+                        }}
+                        className="text-[#c0392b]"
+                      >delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {tab === "journal" && <JournalManager />}
+        {tab === "questions" && <QuestionsManager />}
       </Panel>
     </SiteLayout>
   );
