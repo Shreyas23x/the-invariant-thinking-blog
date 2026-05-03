@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { useSiteViews } from "@/lib/useLikes";
 
 const nav = [
   { to: "/", label: "Home" },
