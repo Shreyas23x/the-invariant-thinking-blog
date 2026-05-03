@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      journal_entries: {
+        Row: {
+          body: string
+          created_at: string
+          date: string
+          id: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          date?: string
+          id?: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          date?: string
+          id?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      math_questions: {
+        Row: {
+          body: string
+          created_at: string
+          date: string
+          difficulty: string | null
+          id: string
+          sort_order: number
+          source: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          date?: string
+          difficulty?: string | null
+          id?: string
+          sort_order?: number
+          source?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          date?: string
+          difficulty?: string | null
+          id?: string
+          sort_order?: number
+          source?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       page_content: {
         Row: {
           key: string
@@ -31,6 +97,35 @@ export type Database = {
           value?: string
         }
         Relationships: []
+      }
+      post_likes: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       posts: {
         Row: {
@@ -80,6 +175,21 @@ export type Database = {
         }
         Relationships: []
       }
+      site_stats: {
+        Row: {
+          count: number
+          key: string
+        }
+        Insert: {
+          count?: number
+          key: string
+        }
+        Update: {
+          count?: number
+          key?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -113,6 +223,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_site_views: { Args: never; Returns: number }
     }
     Enums: {
       app_role: "admin" | "user"
