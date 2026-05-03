@@ -2,11 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
+import { useSiteViews } from "@/lib/useLikes";
 
 const nav = [
   { to: "/", label: "Home" },
   { to: "/cs-projects", label: "CS Projects" },
-  { to: "/math-olympiad", label: "Math Olympiad" },
+  { to: "/math", label: "Math" },
   { to: "/nba-analysis", label: "NBA Analysis" },
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
@@ -46,8 +47,8 @@ export function SiteLayout({
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
         <div id="header" className="otis-header relative">
           <Link to="/">
-            <h1 id="sitetitle" className="text-2xl sm:text-3xl">
-              Invariant Thinking
+            <h1 id="sitetitle" className="text-2xl sm:text-3xl font-mono">
+              ~/Invariant Thinking
             </h1>
           </Link>
           <span className="absolute bottom-1 right-3 text-xs italic opacity-80">
@@ -102,8 +103,9 @@ export function SiteLayout({
                 <span className="col-span-8 text-left text-[#666]">
                   ~ a personal logbook
                 </span>
-                <span className="col-span-4 text-right text-2xl" aria-hidden>
-                  𝔼[X]
+                <span className="col-span-4 text-right" aria-hidden>
+                  <span className="text-2xl">𝔼[i]</span>
+                  <span className="ml-2 text-xs italic text-[#666]">r3v</span>
                 </span>
               </div>
             </div>
@@ -154,18 +156,28 @@ export function SiteLayout({
           </div>
         </div>
 
-        <footer className="mt-6 mb-4 text-center text-xs text-[#557]">
-          © {new Date().getFullYear()} — handcrafted with semicolons & tea
-          <div className="mt-1">
-            Theme inspired by{" "}
-            <a href="https://web.evanchen.cc/" target="_blank" rel="noreferrer">
-              Evan Chen's OTIS
-            </a>
-            .
-          </div>
-        </footer>
+        <SiteFooter />
       </div>
     </div>
+  );
+}
+
+function SiteFooter() {
+  const views = useSiteViews();
+  return (
+    <footer className="mt-6 mb-4 text-center text-xs text-[#557]">
+      © {new Date().getFullYear()} — handcrafted with semicolons & tea
+      <div className="mt-1">
+        Theme inspired by{" "}
+        <a href="https://web.evanchen.cc/" target="_blank" rel="noreferrer">
+          Evan Chen's OTIS
+        </a>
+        .
+      </div>
+      <div className="mt-1 font-mono">
+        ★ total site views: {views === null ? "…" : views.toLocaleString()}
+      </div>
+    </footer>
   );
 }
 

@@ -122,53 +122,71 @@ function AdminDashboard() {
     );
   }
 
+  const [tab, setTab] = useState<"posts" | "journal" | "questions">("posts");
+
   return (
     <SiteLayout pageTitle="Admin panel — Invariant Thinking" title="Admin panel">
-      <Panel subtitle="Manage posts. Click any text on the public site to edit it inline.">
-        <div className="mb-3 flex gap-2">
-          <button
-            onClick={() => setCreating(true)}
-            className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-sm font-semibold text-white"
-          >+ New post</button>
+      <Panel subtitle="Manage posts, journal entries, and math questions.">
+        <div className="mb-3 flex gap-2 flex-wrap">
           <Link to="/" className="border border-[#999] bg-white px-3 py-1 text-sm">← Back to site</Link>
+          {(["posts","journal","questions"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`border px-3 py-1 text-sm ${tab===t ? "border-[#2233b2] bg-[#5266c0] text-white font-semibold" : "border-[#999] bg-white"}`}
+            >{t}</button>
+          ))}
         </div>
 
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b-2 border-[#5266c0] text-left">
-              <th className="py-1 pr-3">Date</th>
-              <th className="py-1 pr-3">Title</th>
-              <th className="py-1 pr-3">Category</th>
-              <th className="py-1 pr-3">Status</th>
-              <th className="py-1">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((p, i) => (
-              <tr key={p.id} className={i % 2 === 0 ? "bg-[#f6fbff]" : "bg-white"}>
-                <td className="py-1 pr-3 align-top font-mono text-xs">{p.date}</td>
-                <td className="py-1 pr-3 align-top">
-                  <div className="font-semibold">{p.title}</div>
-                  <div className="text-xs text-[#445]">/{p.slug}</div>
-                </td>
-                <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
-                <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
-                <td className="py-1 align-top text-xs space-x-2">
-                  <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
-                  <Link to={`/blog/${p.slug}`} className="text-[#2233b2]">view</Link>
-                  <button
-                    onClick={async () => {
-                      if (!confirm(`Delete "${p.title}"?`)) return;
-                      await supabase.from("posts").delete().eq("id", p.id);
-                      refresh();
-                    }}
-                    className="text-[#c0392b]"
-                  >delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {tab === "posts" && (
+          <>
+            <div className="mb-3">
+              <button
+                onClick={() => setCreating(true)}
+                className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-sm font-semibold text-white"
+              >+ New post</button>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b-2 border-[#5266c0] text-left">
+                  <th className="py-1 pr-3">Date</th>
+                  <th className="py-1 pr-3">Title</th>
+                  <th className="py-1 pr-3">Category</th>
+                  <th className="py-1 pr-3">Status</th>
+                  <th className="py-1">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {posts.map((p, i) => (
+                  <tr key={p.id} className={i % 2 === 0 ? "bg-[#f6fbff]" : "bg-white"}>
+                    <td className="py-1 pr-3 align-top font-mono text-xs">{p.date}</td>
+                    <td className="py-1 pr-3 align-top">
+                      <div className="font-semibold">{p.title}</div>
+                      <div className="text-xs text-[#445]">/{p.slug}</div>
+                    </td>
+                    <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
+                    <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
+                    <td className="py-1 align-top text-xs space-x-2">
+                      <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
+                      <Link to={`/blog/${p.slug}`} className="text-[#2233b2]">view</Link>
+                      <button
+                        onClick={async () => {
+                          if (!confirm(`Delete "${p.title}"?`)) return;
+                          await supabase.from("posts").delete().eq("id", p.id);
+                          refresh();
+                        }}
+                        className="text-[#c0392b]"
+                      >delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {tab === "journal" && <JournalManager />}
+        {tab === "questions" && <QuestionsManager />}
       </Panel>
     </SiteLayout>
   );
@@ -356,5 +374,158 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
         </div>
       </Panel>
     </SiteLayout>
+  );
+}
+
+function JournalManager() {
+  const [entries, setEntries] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState({ title: "", body: "", date: new Date().toISOString().slice(0,10) });
+
+  async function refresh() {
+    const { data } = await supabase.from("journal_entries").select("*").order("date", { ascending: false });
+    setEntries(data ?? []);
+  }
+  useEffect(() => { refresh(); }, []);
+
+  async function save() {
+    if (!draft.title) return;
+    if (editingId) {
+      await supabase.from("journal_entries").update(draft).eq("id", editingId);
+    } else {
+      await supabase.from("journal_entries").insert(draft);
+    }
+    setDraft({ title: "", body: "", date: new Date().toISOString().slice(0,10) });
+    setEditingId(null);
+    refresh();
+  }
+  function startEdit(e: any) {
+    setEditingId(e.id);
+    setDraft({ title: e.title, body: e.body, date: e.date });
+  }
+  async function del(id: string) {
+    if (!confirm("Delete this entry?")) return;
+    await supabase.from("journal_entries").delete().eq("id", id);
+    refresh();
+  }
+
+  return (
+    <div className="space-y-4 text-sm">
+      <div className="border border-[#bbb] bg-[#f6fbff] p-3 space-y-2">
+        <div className="font-semibold">{editingId ? "Edit entry" : "New journal entry"}</div>
+        <input value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+          placeholder="Title" className="w-full border border-[#999] bg-white px-2 py-1" />
+        <input type="date" value={draft.date} onChange={(e) => setDraft({ ...draft, date: e.target.value })}
+          className="border border-[#999] bg-white px-2 py-1" />
+        <textarea value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })}
+          rows={6} placeholder="Body (markdown + LaTeX)"
+          className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs" />
+        <div className="flex gap-2">
+          <button onClick={save} className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-white font-semibold">
+            {editingId ? "Save" : "Add"}
+          </button>
+          {editingId && (
+            <button onClick={() => { setEditingId(null); setDraft({ title:"", body:"", date: new Date().toISOString().slice(0,10) }); }}
+              className="border border-[#999] bg-white px-3 py-1">Cancel</button>
+          )}
+        </div>
+      </div>
+      <ul className="space-y-2">
+        {entries.map((e) => (
+          <li key={e.id} className="border border-[#bbb] bg-white p-2">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="font-mono text-xs text-[#557]">{e.date}</span>
+              <span className="font-semibold">{e.title}</span>
+              <span className="ml-auto space-x-2 text-xs">
+                <button onClick={() => startEdit(e)} className="text-[#2233b2]">edit</button>
+                <button onClick={() => del(e.id)} className="text-[#c0392b]">delete</button>
+              </span>
+            </div>
+            {e.body && <div className="mt-1 text-xs text-[#445] whitespace-pre-wrap">{e.body.slice(0, 200)}{e.body.length>200 ? "…" : ""}</div>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function QuestionsManager() {
+  const [items, setItems] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState({ title: "", body: "", source: "", difficulty: "", date: new Date().toISOString().slice(0,10) });
+
+  async function refresh() {
+    const { data } = await supabase.from("math_questions").select("*").order("date", { ascending: false });
+    setItems(data ?? []);
+  }
+  useEffect(() => { refresh(); }, []);
+
+  async function save() {
+    if (!draft.title) return;
+    const payload = { ...draft, source: draft.source || null, difficulty: draft.difficulty || null };
+    if (editingId) {
+      await supabase.from("math_questions").update(payload).eq("id", editingId);
+    } else {
+      await supabase.from("math_questions").insert(payload);
+    }
+    setDraft({ title: "", body: "", source: "", difficulty: "", date: new Date().toISOString().slice(0,10) });
+    setEditingId(null);
+    refresh();
+  }
+  function startEdit(q: any) {
+    setEditingId(q.id);
+    setDraft({ title: q.title, body: q.body, source: q.source ?? "", difficulty: q.difficulty ?? "", date: q.date });
+  }
+  async function del(id: string) {
+    if (!confirm("Delete this question?")) return;
+    await supabase.from("math_questions").delete().eq("id", id);
+    refresh();
+  }
+
+  return (
+    <div className="space-y-4 text-sm">
+      <div className="border border-[#bbb] bg-[#f6fbff] p-3 space-y-2">
+        <div className="font-semibold">{editingId ? "Edit question" : "New question"}</div>
+        <input value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+          placeholder="Title (e.g. USAMO 2017/4)" className="w-full border border-[#999] bg-white px-2 py-1" />
+        <div className="grid gap-2 sm:grid-cols-3">
+          <input value={draft.source} onChange={(e) => setDraft({ ...draft, source: e.target.value })}
+            placeholder="Source" className="border border-[#999] bg-white px-2 py-1" />
+          <input value={draft.difficulty} onChange={(e) => setDraft({ ...draft, difficulty: e.target.value })}
+            placeholder="Difficulty" className="border border-[#999] bg-white px-2 py-1" />
+          <input type="date" value={draft.date} onChange={(e) => setDraft({ ...draft, date: e.target.value })}
+            className="border border-[#999] bg-white px-2 py-1" />
+        </div>
+        <textarea value={draft.body} onChange={(e) => setDraft({ ...draft, body: e.target.value })}
+          rows={8} placeholder="Statement + solution (markdown + LaTeX)"
+          className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs" />
+        <div className="flex gap-2">
+          <button onClick={save} className="border-2 border-[#2233b2] bg-[#5266c0] px-3 py-1 text-white font-semibold">
+            {editingId ? "Save" : "Add"}
+          </button>
+          {editingId && (
+            <button onClick={() => { setEditingId(null); setDraft({ title:"", body:"", source:"", difficulty:"", date: new Date().toISOString().slice(0,10) }); }}
+              className="border border-[#999] bg-white px-3 py-1">Cancel</button>
+          )}
+        </div>
+      </div>
+      <ul className="space-y-2">
+        {items.map((q) => (
+          <li key={q.id} className="border border-[#bbb] bg-white p-2">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="font-semibold">{q.title}</span>
+              {q.source && <span className="otis-tag">{q.source}</span>}
+              {q.difficulty && <span className="otis-tag">{q.difficulty}</span>}
+              <span className="font-mono text-xs text-[#557] ml-auto">{q.date}</span>
+              <span className="space-x-2 text-xs">
+                <button onClick={() => startEdit(q)} className="text-[#2233b2]">edit</button>
+                <button onClick={() => del(q.id)} className="text-[#c0392b]">delete</button>
+              </span>
+            </div>
+            {q.body && <div className="mt-1 text-xs text-[#445] whitespace-pre-wrap">{q.body.slice(0, 200)}{q.body.length>200 ? "…" : ""}</div>}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
