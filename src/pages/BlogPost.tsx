@@ -42,6 +42,7 @@ export default function BlogPost() {
       pageTitle={`${post.title} — Invariant Thinking`}
       pageDescription={post.excerpt}
       title={post.title}
+      topicBg={topicBg}
       sidebar={
         <div>
           <div className="otis-label text-xs">Meta</div>
@@ -66,21 +67,16 @@ export default function BlogPost() {
       }
     >
       <Panel>
-        <div
-          className={topicBg ? "topic-bg p-3 -m-3 mb-3" : ""}
-          style={topicBg ? { backgroundImage: `linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)), url(${topicBg})` } : undefined}
-        >
-          {post.cover_image && (
-            <img
-              src={post.cover_image}
-              alt=""
-              className="mb-4 w-full max-h-96 object-contain bg-[#f6fbff] border border-[#bbb]"
-            />
-          )}
-          <article>
-            <MathBody body={post.body} />
-          </article>
-        </div>
+        {post.cover_image && (
+          <img
+            src={post.cover_image}
+            alt=""
+            className="mb-4 w-full max-h-96 object-contain bg-[#f6fbff] border border-[#bbb]"
+          />
+        )}
+        <article>
+          <MathBody body={post.body} />
+        </article>
       </Panel>
 
       <nav className="mt-3 grid gap-2 sm:grid-cols-2 text-sm">
