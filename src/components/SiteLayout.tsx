@@ -97,10 +97,9 @@ export function SiteLayout({
               style={
                 topicBg
                   ? {
-                      backgroundImage: `url(${topicBg})`,
+                      backgroundImage: `linear-gradient(rgba(114,254,225,0.55), rgba(114,254,225,0.55)), url(${topicBg})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
-                      backgroundBlendMode: "multiply",
                     }
                   : undefined
               }
