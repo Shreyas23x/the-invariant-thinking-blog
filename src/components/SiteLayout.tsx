@@ -91,7 +91,20 @@ export function SiteLayout({
 
         <div id="content" className="mt-3 grid gap-3 md:grid-cols-12">
           <div className="md:col-span-9">
-            <div id="main" className="otis-main">
+            <div
+              id="main"
+              className="otis-main relative"
+              style={
+                topicBg
+                  ? {
+                      backgroundImage: `url(${topicBg})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundBlendMode: "multiply",
+                    }
+                  : undefined
+              }
+            >
               <div className="entry">
                 {title && (
                   <h1 id="pagetitle" className="mb-3 text-2xl">
@@ -106,7 +119,9 @@ export function SiteLayout({
                   ~ a personal logbook
                 </span>
                 <span className="col-span-4 text-right" aria-hidden>
-                  <span className="text-2xl">𝔼[i]</span>
+                  <span className="text-2xl" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
+                    𝔼[<em style={{ fontStyle: "italic" }}>X</em>]
+                  </span>
                   <span className="ml-2 text-xs italic text-[#666]">r3v</span>
                 </span>
               </div>
