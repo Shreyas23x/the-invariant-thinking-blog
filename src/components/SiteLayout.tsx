@@ -45,7 +45,19 @@ export function SiteLayout({
   }, [pageTitle, pageDescription]);
 
   return (
-    <div className="min-h-screen w-full">
+    <div
+      className="min-h-screen w-full"
+      style={
+        topicBg
+          ? {
+              backgroundImage: `url(${topicBg})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundAttachment: "fixed",
+            }
+          : undefined
+      }
+    >
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
         <div id="header" className="otis-header relative">
           <Link to="/">
@@ -94,15 +106,6 @@ export function SiteLayout({
             <div
               id="main"
               className="otis-main relative"
-              style={
-                topicBg
-                  ? {
-                      backgroundImage: `linear-gradient(rgba(114,254,225,0.55), rgba(114,254,225,0.55)), url(${topicBg})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : undefined
-              }
             >
               <div className="entry">
                 {title && (
