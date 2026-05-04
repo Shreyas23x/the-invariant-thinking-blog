@@ -19,12 +19,14 @@ export function SiteLayout({
   sidebar,
   pageTitle,
   pageDescription,
+  topicBg,
 }: {
   title?: string;
   children: ReactNode;
   sidebar?: ReactNode;
   pageTitle?: string;
   pageDescription?: string;
+  topicBg?: string | null;
 }) {
   const { pathname } = useLocation();
   const { user, isAdmin, signOut } = useAuth();
