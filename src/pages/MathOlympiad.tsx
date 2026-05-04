@@ -30,17 +30,22 @@ export default function MathOlympiad() {
         {entries.length === 0 ? (
           <p className="text-sm italic text-[#445]">Nothing logged yet.</p>
         ) : (
-          <ul className="space-y-3">
-            {entries.map((e) => (
-              <li key={e.id} className="border-l-2 border-[#5266c0] pl-3">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-mono text-xs text-[#557]">{e.date}</span>
-                  <span className="font-semibold">{e.title}</span>
-                </div>
-                {e.body && <div className="mt-1 text-sm"><MathBody body={e.body} /></div>}
-              </li>
-            ))}
-          </ul>
+          <details className="group">
+            <summary className="cursor-pointer text-sm text-[#2233b2] hover:underline">
+              Show {entries.length} entr{entries.length === 1 ? "y" : "ies"}
+            </summary>
+            <ul className="mt-2 space-y-3 max-h-96 overflow-y-auto pr-2">
+              {entries.map((e) => (
+                <li key={e.id} className="border-l-2 border-[#5266c0] pl-3">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-mono text-xs text-[#557]">{e.date}</span>
+                    <span className="font-semibold">{e.title}</span>
+                  </div>
+                  {e.body && <div className="mt-1 text-sm"><MathBody body={e.body} /></div>}
+                </li>
+              ))}
+            </ul>
+          </details>
         )}
       </Panel>
 

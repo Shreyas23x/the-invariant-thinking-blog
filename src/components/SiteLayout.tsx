@@ -19,12 +19,14 @@ export function SiteLayout({
   sidebar,
   pageTitle,
   pageDescription,
+  topicBg,
 }: {
   title?: string;
   children: ReactNode;
   sidebar?: ReactNode;
   pageTitle?: string;
   pageDescription?: string;
+  topicBg?: string | null;
 }) {
   const { pathname } = useLocation();
   const { user, isAdmin, signOut } = useAuth();
@@ -51,8 +53,8 @@ export function SiteLayout({
               ~/Invariant Thinking
             </h1>
           </Link>
-          <span className="absolute bottom-1 right-3 text-xs italic opacity-80">
-            By r3v
+          <span className="absolute bottom-1 right-3 text-base" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
+            𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
           </span>
         </div>
 
@@ -89,7 +91,19 @@ export function SiteLayout({
 
         <div id="content" className="mt-3 grid gap-3 md:grid-cols-12">
           <div className="md:col-span-9">
-            <div id="main" className="otis-main">
+            <div
+              id="main"
+              className="otis-main relative"
+              style={
+                topicBg
+                  ? {
+                      backgroundImage: `linear-gradient(rgba(114,254,225,0.55), rgba(114,254,225,0.55)), url(${topicBg})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }
+                  : undefined
+              }
+            >
               <div className="entry">
                 {title && (
                   <h1 id="pagetitle" className="mb-3 text-2xl">
@@ -104,7 +118,9 @@ export function SiteLayout({
                   ~ a personal logbook
                 </span>
                 <span className="col-span-4 text-right" aria-hidden>
-                  <span className="text-2xl">𝔼[i]</span>
+                  <span className="text-2xl" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
+                    𝔼[<em style={{ fontStyle: "italic" }}>X</em>]
+                  </span>
                   <span className="ml-2 text-xs italic text-[#666]">r3v</span>
                 </span>
               </div>
