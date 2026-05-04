@@ -51,8 +51,8 @@ export function SiteLayout({
               ~/Invariant Thinking
             </h1>
           </Link>
-          <span className="absolute bottom-1 right-3 text-xs italic opacity-80">
-            By r3v
+          <span className="absolute bottom-1 right-3 text-base" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
+            𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
           </span>
         </div>
 
