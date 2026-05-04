@@ -102,6 +102,7 @@ function AdminDashboard() {
   const [posts, setPosts] = useState<DbPost[]>([]);
   const [editing, setEditing] = useState<DbPost | null>(null);
   const [creating, setCreating] = useState(false);
+  const [tab, setTab] = useState<"posts" | "journal" | "questions">("posts");
 
   async function refresh() {
     const { data } = await supabase
@@ -121,8 +122,6 @@ function AdminDashboard() {
       />
     );
   }
-
-  const [tab, setTab] = useState<"posts" | "journal" | "questions">("posts");
 
   return (
     <SiteLayout pageTitle="Admin panel — Invariant Thinking" title="Admin panel">
