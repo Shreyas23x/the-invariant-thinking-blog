@@ -235,6 +235,17 @@ function parseBlocks(body: string): Block[] {
         i++;
         break;
       }
+      if (/^\s*```tikz\s*$/.test(ln)) {
+        flushInner();
+        i++;
+        const src: string[] = [];
+        while (i < lines.length && !/^\s*```\s*$/.test(lines[i])) {
+          src.push(lines[i]); i++;
+        }
+        if (i < lines.length) i++;
+        innerOut.push({ type: "tikz", source: src.join("\n") });
+        continue;
+      }
       const dir = ln.match(/^\s*:::\s*(center|right|left)\s*$/);
       const hideDir = ln.match(/^\s*:::\s*hide(?:\s+title="([^"]*)")?\s*$/);
       if (dir) {
