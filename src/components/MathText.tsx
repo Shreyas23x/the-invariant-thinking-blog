@@ -147,6 +147,7 @@ function renderParagraph(text: string, key: string): React.ReactNode {
  */
 type Block =
   | { type: "para"; text: string }
+  | { type: "tikz"; source: string }
   | { type: "align"; align: "center" | "right" | "left"; children: Block[] }
   | { type: "hide"; title: string; children: Block[] };
 
