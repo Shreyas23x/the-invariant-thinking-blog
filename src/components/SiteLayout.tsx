@@ -94,6 +94,15 @@ export function SiteLayout({
             <div
               id="main"
               className="otis-main relative"
+              style={
+                topicBg
+                  ? {
+                      backgroundImage: `linear-gradient(rgba(114,254,225,0.55), rgba(114,254,225,0.55)), url(${topicBg})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }
+                  : undefined
+              }
             >
               <div className="entry">
                 {title && (
