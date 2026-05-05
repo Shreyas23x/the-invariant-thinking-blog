@@ -1,6 +1,7 @@
 import { useState } from "react";
 import katex from "katex";
 import "katex/contrib/mhchem"; // enables \ce{...} chemistry equations
+import { TikzBlock } from "./TikzBlock";
 
 const KATEX_MACROS: Record<string, string> = {
   // physics package essentials
@@ -146,6 +147,7 @@ function renderParagraph(text: string, key: string): React.ReactNode {
  */
 type Block =
   | { type: "para"; text: string }
+  | { type: "tikz"; source: string }
   | { type: "align"; align: "center" | "right" | "left"; children: Block[] }
   | { type: "hide"; title: string; children: Block[] };
 
@@ -233,6 +235,17 @@ function parseBlocks(body: string): Block[] {
         i++;
         break;
       }
+      if (/^\s*```tikz\s*$/.test(ln)) {
+        flushInner();
+        i++;
+        const src: string[] = [];
+        while (i < lines.length && !/^\s*```\s*$/.test(lines[i])) {
+          src.push(lines[i]); i++;
+        }
+        if (i < lines.length) i++;
+        innerOut.push({ type: "tikz", source: src.join("\n") });
+        continue;
+      }
       const dir = ln.match(/^\s*:::\s*(center|right|left)\s*$/);
       const hideDir = ln.match(/^\s*:::\s*hide(?:\s+title="([^"]*)")?\s*$/);
       if (dir) {
@@ -256,6 +269,17 @@ function parseBlocks(body: string): Block[] {
 
   while (i < lines.length) {
     const ln = lines[i];
+    if (/^\s*```tikz\s*$/.test(ln)) {
+      flushTop();
+      i++;
+      const src: string[] = [];
+      while (i < lines.length && !/^\s*```\s*$/.test(lines[i])) {
+        src.push(lines[i]); i++;
+      }
+      if (i < lines.length) i++;
+      top.push({ type: "tikz", source: src.join("\n") });
+      continue;
+    }
     const dir = ln.match(/^\s*:::\s*(center|right|left)\s*$/);
     const hideDir = ln.match(/^\s*:::\s*hide(?:\s+title="([^"]*)")?\s*$/);
     if (dir) {
@@ -281,6 +305,7 @@ function parseBlocks(body: string): Block[] {
 
 function renderBlock(b: Block, key: string): React.ReactNode {
   if (b.type === "para") return renderParagraph(b.text, key);
+  if (b.type === "tikz") return <TikzBlock key={key} source={b.source} />;
   if (b.type === "align") {
     const cls =
       b.align === "center" ? "text-center" : b.align === "right" ? "text-right" : "text-left";
