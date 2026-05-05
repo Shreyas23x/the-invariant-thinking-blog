@@ -305,6 +305,7 @@ function parseBlocks(body: string): Block[] {
 
 function renderBlock(b: Block, key: string): React.ReactNode {
   if (b.type === "para") return renderParagraph(b.text, key);
+  if (b.type === "tikz") return <TikzBlock key={key} source={b.source} />;
   if (b.type === "align") {
     const cls =
       b.align === "center" ? "text-center" : b.align === "right" ? "text-right" : "text-left";
