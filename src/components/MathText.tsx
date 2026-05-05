@@ -1,6 +1,7 @@
 import { useState } from "react";
 import katex from "katex";
 import "katex/contrib/mhchem"; // enables \ce{...} chemistry equations
+import { TikzBlock } from "./TikzBlock";
 
 const KATEX_MACROS: Record<string, string> = {
   // physics package essentials
