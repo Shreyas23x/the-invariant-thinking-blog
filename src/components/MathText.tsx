@@ -121,6 +121,26 @@ function HideBlock({ title, children }: { title: string; children: React.ReactNo
 function renderParagraph(text: string, key: string): React.ReactNode {
   const trimmed = text.trim();
 
+  // Standalone PDF attachment: [pdf:Filename](url) or any standalone link to .pdf
+  const pdfLabeled = trimmed.match(/^\[pdf:([^\]]+)\]\(([^)\s]+)\)$/i);
+  const pdfPlain = trimmed.match(/^\[([^\]]+)\]\(([^)\s]+\.pdf)\)$/i);
+  const pdf = pdfLabeled || pdfPlain;
+  if (pdf) {
+    const name = pdf[1];
+    const url = pdf[2];
+    return (
+      <div key={key} className="my-3 border border-[#9999cc] bg-[#f4f4ff]">
+        <div className="flex items-center justify-between px-3 py-1.5 text-sm font-semibold text-[#000055] border-b border-[#9999cc]">
+          <span>📄 {name}</span>
+          <a href={url} target="_blank" rel="noreferrer noopener" className="text-xs">Open ↗</a>
+        </div>
+        <object data={url} type="application/pdf" className="w-full h-[600px] bg-white">
+          <iframe src={url} className="w-full h-[600px]" title={name} />
+        </object>
+      </div>
+    );
+  }
+
   // Standalone image: ![alt](url)
   const imgMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
   if (imgMatch) {
@@ -139,6 +159,7 @@ function renderParagraph(text: string, key: string): React.ReactNode {
 
   return <p key={key}>{renderInline(text, key)}</p>;
 }
+
 
 /**
  * Parse a full body into block-level structures.

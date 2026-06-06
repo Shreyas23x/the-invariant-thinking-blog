@@ -210,10 +210,12 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
     return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   }
 
-  async function uploadImage(file: File): Promise<string | null> {
+  async function uploadFile(file: File): Promise<string | null> {
     const ext = file.name.split(".").pop();
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await supabase.storage.from("post-images").upload(path, file);
+    const { error } = await supabase.storage.from("post-images").upload(path, file, {
+      contentType: file.type || undefined,
+    });
     if (error) { setError(error.message); return null; }
     const { data } = supabase.storage.from("post-images").getPublicUrl(path);
     return data.publicUrl;
@@ -222,17 +224,26 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
   async function onCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
-    const url = await uploadImage(f);
+    const url = await uploadFile(f);
     if (url) setCoverImage(url);
   }
 
   async function onInlineUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
-    const url = await uploadImage(f);
+    const url = await uploadFile(f);
     if (url) setBody((b) => `${b}\n\n![](${url})\n`);
     e.target.value = "";
   }
+
+  async function onPdfUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = await uploadFile(f);
+    if (url) setBody((b) => `${b}\n\n[pdf:${f.name}](${url})\n`);
+    e.target.value = "";
+  }
+
 
   async function save() {
     setSaving(true);
@@ -307,9 +318,10 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
               <label className="otis-label">Body</label>
               <div className="flex items-center gap-3">
                 <span className="text-[11px] text-[#445]">
-                  **bold** · *italic* · $inline$ · $$display$$ · [text](url) · ![](img-url) ·
+                  **bold** · *italic* · $inline$ · $$display$$ · [text](url) · ![](img-url) · [pdf:name](url) ·
                   {" :::center :::"} · {":::right :::"} · {':::hide title="reveal" :::'}
                 </span>
+
                 <button
                   type="button"
                   onClick={() => setShowPreview(true)}
@@ -325,10 +337,11 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
               rows={22}
               className="w-full border border-[#999] bg-white px-2 py-1 font-mono text-xs"
             />
-            <div className="mt-1 text-xs">
-              Insert image:{" "}
-              <input type="file" accept="image/*" onChange={onInlineUpload} className="text-xs" />
+            <div className="mt-1 text-xs flex flex-wrap gap-3">
+              <label>Insert image: <input type="file" accept="image/*" onChange={onInlineUpload} className="text-xs" /></label>
+              <label>Attach PDF: <input type="file" accept="application/pdf" onChange={onPdfUpload} className="text-xs" /></label>
             </div>
+
           </div>
           {showPreview && (
             <div
