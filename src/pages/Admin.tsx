@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, type DbPost } from "@/lib/usePosts";
 import { MathBody } from "@/components/MathText";
+import { THEME_VARS } from "@/lib/useTheme";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
