@@ -341,6 +341,33 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
               <label>Insert image: <input type="file" accept="image/*" onChange={onInlineUpload} className="text-xs" /></label>
               <label>Attach PDF: <input type="file" accept="application/pdf" onChange={onPdfUpload} className="text-xs" /></label>
             </div>
+            {(() => {
+              const pdfs = Array.from(body.matchAll(/\[pdf:([^\]]+)\]\(([^)\s]+)\)/g));
+              if (pdfs.length === 0) return null;
+              return (
+                <div className="mt-2 border border-[#9999cc] bg-[#f4f4ff] p-2">
+                  <div className="otis-label text-xs mb-1">Attached PDFs</div>
+                  <ul className="space-y-1 text-xs">
+                    {pdfs.map((m, idx) => (
+                      <li key={idx} className="flex items-center justify-between gap-2">
+                        <span className="truncate">📄 {m[1]}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            // Remove the exact occurrence; also trim any extra surrounding blank lines.
+                            const token = m[0];
+                            setBody((b) => b.replace(new RegExp(`\\n*\\s*${token.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\s*\\n*`), "\n\n"));
+                          }}
+                          className="border border-[#c0392b] px-2 py-0.5 text-[#c0392b]"
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })()}
 
           </div>
           {showPreview && (
