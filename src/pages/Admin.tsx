@@ -356,7 +356,8 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
                           onClick={() => {
                             // Remove the exact occurrence; also trim any extra surrounding blank lines.
                             const token = m[0];
-                            setBody((b) => b.replace(new RegExp(`\\n*\\s*${token.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\s*\\n*`), "\n\n"));
+                            const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                            setBody((b) => b.replace(new RegExp(`\\n*\\s*${escaped}\\s*\\n*`), "\n\n"));
                           }}
                           className="border border-[#c0392b] px-2 py-0.5 text-[#c0392b]"
                         >
