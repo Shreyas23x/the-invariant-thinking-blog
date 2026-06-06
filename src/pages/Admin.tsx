@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { CATEGORIES, type DbPost } from "@/lib/usePosts";
 import { MathBody } from "@/components/MathText";
+import { THEME_VARS } from "@/lib/useTheme";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function Admin() {
   const { user, isAdmin, loading } = useAuth();
@@ -102,7 +104,7 @@ function AdminDashboard() {
   const [posts, setPosts] = useState<DbPost[]>([]);
   const [editing, setEditing] = useState<DbPost | null>(null);
   const [creating, setCreating] = useState(false);
-  const [tab, setTab] = useState<"posts" | "journal" | "questions">("posts");
+  const [tab, setTab] = useState<"posts" | "journal" | "questions" | "theme">("posts");
 
   async function refresh() {
     const { data } = await supabase
@@ -128,7 +130,7 @@ function AdminDashboard() {
       <Panel subtitle="Manage posts, journal entries, and math questions.">
         <div className="mb-3 flex gap-2 flex-wrap">
           <Link to="/" className="border border-[#999] bg-white px-3 py-1 text-sm">← Back to site</Link>
-          {(["posts","journal","questions"] as const).map((t) => (
+          {(["posts","journal","questions","theme"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -186,6 +188,7 @@ function AdminDashboard() {
 
         {tab === "journal" && <JournalManager />}
         {tab === "questions" && <QuestionsManager />}
+        {tab === "theme" && <ThemeManager />}
       </Panel>
     </SiteLayout>
   );
@@ -356,7 +359,8 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
                           onClick={() => {
                             // Remove the exact occurrence; also trim any extra surrounding blank lines.
                             const token = m[0];
-                            setBody((b) => b.replace(new RegExp(`\\n*\\s*${token.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\s*\\n*`), "\n\n"));
+                            const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                            setBody((b) => b.replace(new RegExp(`\\n*\\s*${escaped}\\s*\\n*`), "\n\n"));
                           }}
                           className="border border-[#c0392b] px-2 py-0.5 text-[#c0392b]"
                         >
@@ -565,6 +569,70 @@ function QuestionsManager() {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function ThemeManager() {
+  const { get, update, refresh } = usePageContent();
+  const [saving, setSaving] = useState<string | null>(null);
+  const [msg, setMsg] = useState("");
+
+  async function setColor(key: string, value: string) {
+    setSaving(key);
+    await update(`theme.${key}`, value);
+    setSaving(null);
+  }
+
+  async function resetAll() {
+    setMsg("Resetting…");
+    for (const v of THEME_VARS) {
+      await update(`theme.${v.key}`, "");
+    }
+    await refresh();
+    setMsg("Reset to defaults.");
+    setTimeout(() => setMsg(""), 1500);
+  }
+
+  return (
+    <div className="space-y-3 text-sm">
+      <p className="text-xs text-[#445]">
+        Live site colors. Empty value = fall back to the default (v1 OTIS palette).
+        Changes apply immediately for all visitors.
+      </p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {THEME_VARS.map((v) => {
+          const current = get(`theme.${v.key}`, "") || v.default;
+          return (
+            <div key={v.key} className="border border-[#bbb] bg-white p-2 flex items-center gap-3">
+              <input
+                type="color"
+                value={current}
+                onChange={(e) => setColor(v.key, e.target.value)}
+                className="h-10 w-14 border border-[#999] bg-white"
+              />
+              <div className="flex-1">
+                <div className="font-semibold">{v.label}</div>
+                <div className="font-mono text-xs text-[#557]">--{v.key}</div>
+                <div className="font-mono text-xs">{current}{!get(`theme.${v.key}`, "") && " (default)"}</div>
+              </div>
+              {get(`theme.${v.key}`, "") && (
+                <button
+                  onClick={() => setColor(v.key, "")}
+                  className="text-xs text-[#c0392b]"
+                >reset</button>
+              )}
+              {saving === v.key && <span className="text-xs text-[#445]">…</span>}
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex items-center gap-3">
+        <button onClick={resetAll} className="border border-[#999] bg-white px-3 py-1 text-sm">
+          Reset all to defaults
+        </button>
+        {msg && <span className="text-xs text-[#445]">{msg}</span>}
+      </div>
     </div>
   );
 }

@@ -9,9 +9,12 @@ import BlogIndex from "./pages/BlogIndex";
 import BlogPost from "./pages/BlogPost";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import { ThemeApplier } from "./lib/useTheme";
 
 export default function App() {
   return (
+    <>
+    <ThemeApplier />
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/about" element={<About />} />
@@ -25,5 +28,6 @@ export default function App() {
       <Route path="/admin" element={<Admin />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </>
   );
 }

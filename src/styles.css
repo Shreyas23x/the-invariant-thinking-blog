@@ -84,7 +84,8 @@
      --otis-h1: #000055;
      --otis-h2: #8f008f;
   */
-  /* Previous shift (v2) — kept for revert:
+  /* Active palette — v1 (original OTIS). */
+  /* v2 shift (kept for revert):
      --background: #e6efe9;
      --otis-header: #4a5aa8;
      --otis-header-border: #1e2a8a;
@@ -94,16 +95,26 @@
      --otis-h1: #1a1066;
      --otis-h2: #a3328f;
   */
-  --background: #eef0e4;
+  /* v3 shift (kept for revert):
+     --background: #eef0e4;
+     --otis-header: #5d6bb8;
+     --otis-header-border: #2f3a96;
+     --otis-main: #a8ecd2;
+     --otis-side: #d2f0e0;
+     --otis-nav: #e2dcf0;
+     --otis-h1: #20196b;
+     --otis-h2: #b03a8c;
+  */
+  --background: #ddeeee;
   --foreground: #1a1a1a;
 
-  --otis-header: #5d6bb8;
-  --otis-header-border: #2f3a96;
-  --otis-main: #a8ecd2;
-  --otis-side: #d2f0e0;
-  --otis-nav: #e2dcf0;
-  --otis-h1: #20196b;
-  --otis-h2: #b03a8c;
+  --otis-header: #5266c0;
+  --otis-header-border: #2233b2;
+  --otis-main: #72fee1;
+  --otis-side: #b2fee1;
+  --otis-nav: #ccccff;
+  --otis-h1: #000055;
+  --otis-h2: #8f008f;
 
 
 
