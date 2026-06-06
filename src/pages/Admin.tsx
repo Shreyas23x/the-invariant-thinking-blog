@@ -128,7 +128,7 @@ function AdminDashboard() {
       <Panel subtitle="Manage posts, journal entries, and math questions.">
         <div className="mb-3 flex gap-2 flex-wrap">
           <Link to="/" className="border border-[#999] bg-white px-3 py-1 text-sm">← Back to site</Link>
-          {(["posts","journal","questions"] as const).map((t) => (
+          {(["posts","journal","questions","theme"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
