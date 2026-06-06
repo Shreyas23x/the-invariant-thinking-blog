@@ -84,16 +84,27 @@
      --otis-h1: #000055;
      --otis-h2: #8f008f;
   */
-  --background: #e6efe9;
+  /* Previous shift (v2) — kept for revert:
+     --background: #e6efe9;
+     --otis-header: #4a5aa8;
+     --otis-header-border: #1e2a8a;
+     --otis-main: #8ef0cf;
+     --otis-side: #c4f2dc;
+     --otis-nav: #d6d1f2;
+     --otis-h1: #1a1066;
+     --otis-h2: #a3328f;
+  */
+  --background: #eef0e4;
   --foreground: #1a1a1a;
 
-  --otis-header: #4a5aa8;
-  --otis-header-border: #1e2a8a;
-  --otis-main: #8ef0cf;
-  --otis-side: #c4f2dc;
-  --otis-nav: #d6d1f2;
-  --otis-h1: #1a1066;
-  --otis-h2: #a3328f;
+  --otis-header: #5d6bb8;
+  --otis-header-border: #2f3a96;
+  --otis-main: #a8ecd2;
+  --otis-side: #d2f0e0;
+  --otis-nav: #e2dcf0;
+  --otis-h1: #20196b;
+  --otis-h2: #b03a8c;
+
 
 
   --primary: #5266c0;
