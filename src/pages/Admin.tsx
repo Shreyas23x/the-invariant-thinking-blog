@@ -186,6 +186,7 @@ function AdminDashboard() {
 
         {tab === "journal" && <JournalManager />}
         {tab === "questions" && <QuestionsManager />}
+        {tab === "theme" && <ThemeManager />}
       </Panel>
     </SiteLayout>
   );
