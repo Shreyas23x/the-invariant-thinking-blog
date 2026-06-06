@@ -74,16 +74,27 @@
   --radius: 0.375rem;
 
   /* Exact hex values from OTIS otis.css, expressed unchanged. */
-  --background: #ddeeee;
+  /* Original OTIS palette — kept for easy revert:
+     --background: #ddeeee;
+     --otis-header: #5266c0;
+     --otis-header-border: #2233b2;
+     --otis-main: #72fee1;
+     --otis-side: #b2fee1;
+     --otis-nav: #ccccff;
+     --otis-h1: #000055;
+     --otis-h2: #8f008f;
+  */
+  --background: #e6efe9;
   --foreground: #1a1a1a;
 
-  --otis-header: #5266c0;
-  --otis-header-border: #2233b2;
-  --otis-main: #72fee1;
-  --otis-side: #b2fee1;
-  --otis-nav: #ccccff;
-  --otis-h1: #000055;
-  --otis-h2: #8f008f;
+  --otis-header: #4a5aa8;
+  --otis-header-border: #1e2a8a;
+  --otis-main: #8ef0cf;
+  --otis-side: #c4f2dc;
+  --otis-nav: #d6d1f2;
+  --otis-h1: #1a1066;
+  --otis-h2: #a3328f;
+
 
   --primary: #5266c0;
   --primary-foreground: #ffffff;
