@@ -102,7 +102,7 @@ function AdminDashboard() {
   const [posts, setPosts] = useState<DbPost[]>([]);
   const [editing, setEditing] = useState<DbPost | null>(null);
   const [creating, setCreating] = useState(false);
-  const [tab, setTab] = useState<"posts" | "journal" | "questions">("posts");
+  const [tab, setTab] = useState<"posts" | "journal" | "questions" | "theme">("posts");
 
   async function refresh() {
     const { data } = await supabase
