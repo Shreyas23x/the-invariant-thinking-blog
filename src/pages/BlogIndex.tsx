@@ -19,7 +19,7 @@ export default function BlogIndex() {
           <div className="otis-label text-xs">Categories</div>
           <ul className="mt-1 space-y-1 text-sm">
             {CATEGORIES.map((c) => (
-              <li key={c}><a href={`#${slugify(c)}`}>» {c}</a></li>
+              <li key={c}><a href={`#${slugify(c)}`}>» {categoryLabel(c)}</a></li>
             ))}
           </ul>
         </div>
