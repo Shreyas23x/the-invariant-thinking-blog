@@ -18,6 +18,12 @@ export type DbPost = {
 export type Category = "CS Projects" | "Math Olympiad" | "NBA Analysis";
 export const CATEGORIES: Category[] = ["CS Projects", "Math Olympiad", "NBA Analysis"];
 
+// Display label for a category. DB values stay as-is; we only relabel in UI.
+export function categoryLabel(c: string): string {
+  if (c === "Math Olympiad") return "Math";
+  return c;
+}
+
 export function usePosts(includeUnpublished = false) {
   const [posts, setPosts] = useState<DbPost[] | null>(null);
 
