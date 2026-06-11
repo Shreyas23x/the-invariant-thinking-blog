@@ -292,7 +292,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
             <div>
               <label className="otis-label block mb-1">Category</label>
               <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full border border-[#999] bg-white px-2 py-1">
-                {CATEGORIES.map((c) => (<option key={c}>{c}</option>))}
+                {CATEGORIES.map((c) => (<option key={c} value={c}>{categoryLabel(c)}</option>))}
               </select>
             </div>
           </div>
