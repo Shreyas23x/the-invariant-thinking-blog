@@ -165,7 +165,7 @@ function AdminDashboard() {
                       <div className="font-semibold">{p.title}</div>
                       <div className="text-xs text-[#445]">/{p.slug}</div>
                     </td>
-                    <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
+                    <td className="py-1 pr-3 align-top text-xs">{categoryLabel(p.category)}</td>
                     <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
                     <td className="py-1 align-top text-xs space-x-2">
                       <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
