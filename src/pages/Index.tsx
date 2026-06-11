@@ -43,7 +43,7 @@ export default function Index() {
             const count = postsByCategory(all, cat).length;
             return (
               <li key={cat} className="border border-[#5266c0] bg-white p-3">
-                <div className="font-bold text-[#000055]">{cat}</div>
+                <div className="font-bold text-[#000055]">{categoryLabel(cat)}</div>
                 <div className="text-xs text-[#445]">
                   {count} {count === 1 ? "post" : "posts"}
                 </div>
