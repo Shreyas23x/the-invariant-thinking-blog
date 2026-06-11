@@ -1,6 +1,6 @@
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { PostTable } from "@/components/PostTable";
-import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
+import { usePosts, postsByCategory, CATEGORIES, categoryLabel } from "@/lib/usePosts";
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
