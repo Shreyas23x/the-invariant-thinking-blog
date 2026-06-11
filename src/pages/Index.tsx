@@ -10,7 +10,7 @@ export default function Index() {
 
   return (
     <SiteLayout
-      pageTitle="Invariant Thinking — CS, Math Olympiad & NBA Analysis"
+      pageTitle="Invariant Thinking — CS, Math & NBA Analysis"
       pageDescription="A personal blog on CS projects, math olympiad problems, and NBA analysis."
       title="Welcome to Invariant Thinking"
       sidebar={
