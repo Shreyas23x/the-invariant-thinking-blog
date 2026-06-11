@@ -1,6 +1,6 @@
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { EditableText } from "@/components/EditableText";
-import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
+import { usePosts, postsByCategory, CATEGORIES, categoryLabel } from "@/lib/usePosts";
 import { Link } from "react-router-dom";
 
 export default function Index() {
