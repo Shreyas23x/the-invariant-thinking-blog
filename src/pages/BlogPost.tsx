@@ -47,7 +47,7 @@ export default function BlogPost() {
         <div>
           <div className="otis-label text-xs">Meta</div>
           <p className="mt-1 text-xs"><b>date:</b> {post.date}</p>
-          <p className="text-xs"><b>category:</b> {post.category}</p>
+          <p className="text-xs"><b>category:</b> {categoryLabel(post.category)}</p>
           {topic && <p className="text-xs"><b>topic:</b> {topic.replace("-", " ")}</p>}
           <div className="mt-1 flex flex-wrap gap-1">
             {post.tags.map((t) => (<span key={t} className="otis-tag">#{t}</span>))}
