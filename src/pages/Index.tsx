@@ -1,6 +1,6 @@
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { EditableText } from "@/components/EditableText";
-import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
+import { usePosts, postsByCategory, CATEGORIES, categoryLabel } from "@/lib/usePosts";
 import { Link } from "react-router-dom";
 
 export default function Index() {
@@ -43,7 +43,7 @@ export default function Index() {
             const count = postsByCategory(all, cat).length;
             return (
               <li key={cat} className="border border-[#5266c0] bg-white p-3">
-                <div className="font-bold text-[#000055]">{cat}</div>
+                <div className="font-bold text-[#000055]">{categoryLabel(cat)}</div>
                 <div className="text-xs text-[#445]">
                   {count} {count === 1 ? "post" : "posts"}
                 </div>
@@ -66,7 +66,7 @@ export default function Index() {
                   {p.title}
                 </Link>
                 <span className="font-mono text-xs text-[#557]">{p.date}</span>
-                <span className="otis-tag">{p.category}</span>
+                <span className="otis-tag">{categoryLabel(p.category)}</span>
               </div>
               <p className="mt-1 text-sm leading-relaxed">{p.excerpt}</p>
             </li>

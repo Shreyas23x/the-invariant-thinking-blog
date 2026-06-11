@@ -1,6 +1,6 @@
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { PostTable } from "@/components/PostTable";
-import { usePosts, postsByCategory, CATEGORIES } from "@/lib/usePosts";
+import { usePosts, postsByCategory, CATEGORIES, categoryLabel } from "@/lib/usePosts";
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -19,7 +19,7 @@ export default function BlogIndex() {
           <div className="otis-label text-xs">Categories</div>
           <ul className="mt-1 space-y-1 text-sm">
             {CATEGORIES.map((c) => (
-              <li key={c}><a href={`#${slugify(c)}`}>» {c}</a></li>
+              <li key={c}><a href={`#${slugify(c)}`}>» {categoryLabel(c)}</a></li>
             ))}
           </ul>
         </div>
@@ -28,7 +28,7 @@ export default function BlogIndex() {
       {CATEGORIES.map((category) => {
         const items = postsByCategory(all, category);
         return (
-          <Panel key={category} title={category}>
+          <Panel key={category} title={categoryLabel(category)}>
             <a id={slugify(category)} />
             {items.length === 0 ? (
               <p className="text-sm italic text-[#445]">Nothing here yet — coming soon.</p>

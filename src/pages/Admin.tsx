@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { CATEGORIES, type DbPost } from "@/lib/usePosts";
+import { CATEGORIES, categoryLabel, type DbPost } from "@/lib/usePosts";
 import { MathBody } from "@/components/MathText";
 import { THEME_VARS } from "@/lib/useTheme";
 import { usePageContent } from "@/lib/usePageContent";
@@ -165,7 +165,7 @@ function AdminDashboard() {
                       <div className="font-semibold">{p.title}</div>
                       <div className="text-xs text-[#445]">/{p.slug}</div>
                     </td>
-                    <td className="py-1 pr-3 align-top text-xs">{p.category}</td>
+                    <td className="py-1 pr-3 align-top text-xs">{categoryLabel(p.category)}</td>
                     <td className="py-1 pr-3 align-top text-xs">{p.published ? "✓ live" : "draft"}</td>
                     <td className="py-1 align-top text-xs space-x-2">
                       <button onClick={() => setEditing(p)} className="text-[#2233b2]">edit</button>
@@ -292,7 +292,7 @@ function PostEditor({ post, onClose }: { post: DbPost | null; onClose: () => voi
             <div>
               <label className="otis-label block mb-1">Category</label>
               <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full border border-[#999] bg-white px-2 py-1">
-                {CATEGORIES.map((c) => (<option key={c}>{c}</option>))}
+                {CATEGORIES.map((c) => (<option key={c} value={c}>{categoryLabel(c)}</option>))}
               </select>
             </div>
           </div>
