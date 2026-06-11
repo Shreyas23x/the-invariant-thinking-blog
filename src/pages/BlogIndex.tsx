@@ -28,7 +28,7 @@ export default function BlogIndex() {
       {CATEGORIES.map((category) => {
         const items = postsByCategory(all, category);
         return (
-          <Panel key={category} title={category}>
+          <Panel key={category} title={categoryLabel(category)}>
             <a id={slugify(category)} />
             {items.length === 0 ? (
               <p className="text-sm italic text-[#445]">Nothing here yet — coming soon.</p>
