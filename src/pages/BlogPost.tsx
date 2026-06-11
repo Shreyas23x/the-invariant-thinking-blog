@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { MathBody } from "@/components/MathText";
-import { usePost, usePosts } from "@/lib/usePosts";
+import { usePost, usePosts, categoryLabel } from "@/lib/usePosts";
 import { useLikes } from "@/lib/useLikes";
 import { topicFromTags, topicImage } from "@/lib/topics";
 
