@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteLayout, Panel } from "@/components/SiteLayout";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
-import { CATEGORIES, type DbPost } from "@/lib/usePosts";
+import { CATEGORIES, categoryLabel, type DbPost } from "@/lib/usePosts";
 import { MathBody } from "@/components/MathText";
 import { THEME_VARS } from "@/lib/useTheme";
 import { usePageContent } from "@/lib/usePageContent";
