@@ -66,7 +66,7 @@ export default function Index() {
                   {p.title}
                 </Link>
                 <span className="font-mono text-xs text-[#557]">{p.date}</span>
-                <span className="otis-tag">{p.category}</span>
+                <span className="otis-tag">{categoryLabel(p.category)}</span>
               </div>
               <p className="mt-1 text-sm leading-relaxed">{p.excerpt}</p>
             </li>
