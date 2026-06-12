@@ -41,16 +41,28 @@ export default function Index() {
         <ul className="mt-3 grid gap-2 sm:grid-cols-3">
           {CATEGORIES.map((cat) => {
             const count = postsByCategory(all, cat).length;
+            const href =
+              cat === "CS Projects"
+                ? "/cs-projects"
+                : cat === "Math Olympiad"
+                ? "/math"
+                : "/nba-analysis";
             return (
-              <li key={cat} className="border border-[#5266c0] bg-white p-3">
-                <div className="font-bold text-[#000055]">{categoryLabel(cat)}</div>
-                <div className="text-xs text-[#445]">
-                  {count} {count === 1 ? "post" : "posts"}
-                </div>
+              <li key={cat}>
+                <Link
+                  to={href}
+                  className="block border border-[#5266c0] bg-white p-3 no-underline hover:bg-[#f0f2ff]"
+                >
+                  <div className="font-bold text-[#000055]">{categoryLabel(cat)}</div>
+                  <div className="text-xs text-[#445]">
+                    {count} {count === 1 ? "post" : "posts"}
+                  </div>
+                </Link>
               </li>
             );
           })}
         </ul>
+
         <p className="mt-3 leading-relaxed">
           Start with the <Link to="/blog">blog index</Link>, or jump into a
           recent post below.
