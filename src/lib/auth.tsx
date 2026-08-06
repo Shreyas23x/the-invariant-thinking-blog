@@ -8,7 +8,7 @@ type AuthCtx = {
   isAdmin: boolean;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
-  signUp: (email: string, password: string) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, emailRedirectTo?: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 };
 
