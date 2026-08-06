@@ -27,6 +27,7 @@ export default function App() {
       <Route path="/blog" element={<BlogIndex />} />
       <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     </>
