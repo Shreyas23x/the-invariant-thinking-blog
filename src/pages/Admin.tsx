@@ -33,21 +33,51 @@ export default function Admin() {
   return <AdminDashboard />;
 }
 
+function safeNext(raw: string | null): string {
+  if (!raw) return "/admin";
+  try {
+    const url = new URL(raw, window.location.origin);
+    if (url.origin !== window.location.origin) return "/admin";
+    return url.pathname + url.search;
+  } catch {
+    return "/admin";
+  }
+}
+
 function LoginForm() {
   const { signIn, signUp } = useAuth();
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const next = safeNext(params.get("next"));
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setMessage("");
     setBusy(true);
-    const { error } = await (mode === "signin" ? signIn(email, password) : signUp(email, password));
+    const redirectTo = `${window.location.origin}/admin?next=${encodeURIComponent(next)}`;
+    const { error } = await (mode === "signin" ? signIn(email, password) : signUp(email, password, redirectTo));
     setBusy(false);
-    if (error) setError(error);
+    if (error) {
+      setError(error);
+      return;
+    }
+    if (mode === "signin") {
+      navigate(next, { replace: true });
+    } else {
+      const { data: sess } = await supabase.auth.getSession();
+      if (sess.session) {
+        navigate(next, { replace: true });
+      } else {
+        setMessage("Account created. Please check your email to confirm, then sign in.");
+      }
+    }
   }
 
   return (
@@ -77,6 +107,7 @@ function LoginForm() {
             />
           </div>
           {error && <p className="text-xs text-[#c0392b]">{error}</p>}
+          {message && <p className="text-xs text-[#2e7d32]">{message}</p>}
           <button
             type="submit" disabled={busy}
             className="border-2 border-[#2233b2] bg-[#5266c0] px-4 py-1.5 text-sm font-semibold text-white"
