@@ -8,6 +8,7 @@ import NBAAnalysis from "./pages/NBAAnalysis";
 import BlogIndex from "./pages/BlogIndex";
 import BlogPost from "./pages/BlogPost";
 import Admin from "./pages/Admin";
+import OAuthConsent from "./pages/OAuthConsent";
 import NotFound from "./pages/NotFound";
 import { ThemeApplier } from "./lib/useTheme";
 
