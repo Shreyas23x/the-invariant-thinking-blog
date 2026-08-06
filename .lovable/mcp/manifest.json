@@ -1,0 +1,422 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://aeabbuzfpetjqbjxtdvn.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "invariant-thinking",
+      "version": "1.0.0",
+      "title": "Invariant Thinking"
+    },
+    "tools": [
+      {
+        "name": "list_posts",
+        "title": "List posts",
+        "description": "List blog posts with optional filters. Returns id, title, slug, category, date, excerpt, and published status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "enum": [
+                "CS Projects",
+                "Math Olympiad",
+                "NBA Analysis"
+              ],
+              "description": "Filter by category."
+            },
+            "published_only": {
+              "type": "boolean",
+              "default": false,
+              "description": "Only return published posts."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "description": "Maximum posts to return."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_post",
+        "title": "Get post",
+        "description": "Fetch a single blog post by slug, including its full body and metadata.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "URL slug of the post."
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_post",
+        "title": "Create post",
+        "description": "Create a new blog post. The current date is used unless overridden. Slug is auto-generated from the title if omitted.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Post title."
+            },
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "URL-safe slug; auto-generated from title if not provided."
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "CS Projects",
+                "Math Olympiad",
+                "NBA Analysis"
+              ],
+              "description": "Post category."
+            },
+            "body": {
+              "type": "string",
+              "default": "",
+              "description": "Full post body in Markdown/LaTeX."
+            },
+            "excerpt": {
+              "type": "string",
+              "default": "",
+              "description": "Short preview excerpt."
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [],
+              "description": "List of tags."
+            },
+            "cover_image": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL to a cover image."
+            },
+            "published": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether the post is publicly visible."
+            },
+            "date": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Publication date in YYYY-MM-DD; defaults to today."
+            }
+          },
+          "required": [
+            "title",
+            "category"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_post",
+        "title": "Update post",
+        "description": "Update an existing blog post by slug. Only provided fields are changed.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Slug of the post to update."
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "New title."
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "CS Projects",
+                "Math Olympiad",
+                "NBA Analysis"
+              ],
+              "description": "New category."
+            },
+            "body": {
+              "type": "string",
+              "description": "New body."
+            },
+            "excerpt": {
+              "type": "string",
+              "description": "New excerpt."
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "New list of tags."
+            },
+            "cover_image": {
+              "type": "string",
+              "format": "uri",
+              "description": "New cover image URL."
+            },
+            "published": {
+              "type": "boolean",
+              "description": "New published status."
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "delete_post",
+        "title": "Delete post",
+        "description": "Delete a blog post by slug.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Slug of the post to delete."
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_journal_entries",
+        "title": "List journal entries",
+        "description": "List math olympiad journal entries.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "description": "Maximum entries to return."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_journal_entry",
+        "title": "Create journal entry",
+        "description": "Add a new entry to the math olympiad journal.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Entry title."
+            },
+            "body": {
+              "type": "string",
+              "default": "",
+              "description": "Entry body in Markdown/LaTeX."
+            },
+            "date": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Date in YYYY-MM-DD; defaults to today."
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_questions",
+        "title": "List questions",
+        "description": "List custom math problems / questions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "description": "Maximum questions to return."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_question",
+        "title": "Create question",
+        "description": "Add a new math problem to the questions bank.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Problem title."
+            },
+            "body": {
+              "type": "string",
+              "default": "",
+              "description": "Problem statement in Markdown/LaTeX."
+            },
+            "source": {
+              "type": "string",
+              "description": "Source or contest origin."
+            },
+            "difficulty": {
+              "type": "string",
+              "description": "Difficulty label."
+            },
+            "date": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Date in YYYY-MM-DD; defaults to today."
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_site_stats",
+        "title": "Get site stats",
+        "description": "Return total site views and total post likes.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_page_content",
+        "title": "Update page content",
+        "description": "Update a page content key (e.g. home hero text) to a new value.",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Page content key."
+            },
+            "value": {
+              "type": "string",
+              "description": "New value."
+            }
+          },
+          "required": [
+            "key",
+            "value"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
