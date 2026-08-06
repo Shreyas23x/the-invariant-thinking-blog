@@ -58,11 +58,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       return { error: error?.message };
     },
-    async signUp(email, password) {
+    async signUp(email, password, emailRedirectTo) {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/admin` },
+        options: { emailRedirectTo: emailRedirectTo ?? `${window.location.origin}/admin` },
       });
       return { error: error?.message };
     },
