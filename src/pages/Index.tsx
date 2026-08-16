@@ -17,8 +17,7 @@ export default function Index() {
         <div>
           <div className="otis-label text-xs">Status</div>
           <p className="mt-1 text-xs leading-relaxed">
-            ✦ Currently: shipping side projects, grinding olympiad sets,
-            watching too much basketball.
+            ✦ Currently: Probably doing nothing.
           </p>
         </div>
       }

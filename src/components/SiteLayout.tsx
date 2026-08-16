@@ -182,7 +182,7 @@ function SiteFooter() {
   const views = useSiteViews();
   return (
     <footer className="mt-6 mb-4 text-center text-xs text-[#557]">
-      © {new Date().getFullYear()} — handcrafted with semicolons & tea
+      © {new Date().getFullYear()}
       <div className="mt-1">
         Theme inspired by{" "}
         <a href="https://web.evanchen.cc/" target="_blank" rel="noreferrer">
