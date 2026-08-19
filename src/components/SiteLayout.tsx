@@ -47,12 +47,12 @@ export function SiteLayout({
   return (
     <div className="min-h-screen w-full">
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
-        <div id="header" className="otis-header relative">
-          <Link to="/" className="inline-flex items-center gap-2">
-            <h1 id="sitetitle" className="text-2xl sm:text-3xl font-mono">
+        <div id="header" className="otis-header relative flex items-center justify-center py-5">
+          <Link to="/" className="group inline-flex items-center gap-3">
+            <h1 id="sitetitle" className="text-3xl sm:text-4xl font-mono">
               ~/Invariant Thinking
             </h1>
-            <TreeGraphIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden />
+            <TreeGraphIcon className="h-8 w-8 sm:h-9 sm:w-9 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3" aria-hidden />
           </Link>
           <span className="absolute bottom-1 right-3 text-base" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
             𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
