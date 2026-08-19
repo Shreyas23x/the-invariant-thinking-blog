@@ -119,8 +119,8 @@ export function SiteLayout({
                   ~ a personal logbook
                 </span>
                 <span className="col-span-4 text-right" aria-hidden>
-                  <span className="text-2xl" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
-                    𝔼[<em style={{ fontStyle: "italic" }}>X</em>]
+                <span className="text-2xl" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
+                    𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
                   </span>
                   <span className="ml-2 text-xs italic text-[#666]">r3v</span>
                 </span>
