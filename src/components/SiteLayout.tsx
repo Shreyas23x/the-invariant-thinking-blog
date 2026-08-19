@@ -48,10 +48,11 @@ export function SiteLayout({
     <div className="min-h-screen w-full">
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
         <div id="header" className="otis-header relative">
-          <Link to="/">
+          <Link to="/" className="inline-flex items-center gap-2">
             <h1 id="sitetitle" className="text-2xl sm:text-3xl font-mono">
               ~/Invariant Thinking
             </h1>
+            <TreeGraphIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden />
           </Link>
           <span className="absolute bottom-1 right-3 text-base" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
             𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
@@ -118,8 +119,8 @@ export function SiteLayout({
                   ~ a personal logbook
                 </span>
                 <span className="col-span-4 text-right" aria-hidden>
-                  <span className="text-2xl" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
-                    𝔼[<em style={{ fontStyle: "italic" }}>X</em>]
+                <span className="text-2xl" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
+                    𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
                   </span>
                   <span className="ml-2 text-xs italic text-[#666]">r3v</span>
                 </span>
@@ -175,6 +176,30 @@ export function SiteLayout({
         <SiteFooter />
       </div>
     </div>
+  );
+}
+
+function TreeGraphIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="4" r="1.6" />
+      <circle cx="7" cy="10" r="1.6" />
+      <circle cx="17" cy="10" r="1.6" />
+      <circle cx="5" cy="17" r="1.6" />
+      <circle cx="9" cy="17" r="1.6" />
+      <circle cx="15" cy="17" r="1.6" />
+      <circle cx="19" cy="17" r="1.6" />
+      <path d="M12 4v2.5a1 1 0 0 1-1 1H8a1 1 0 0 0-1 1v1.5M12 5.5a1 1 0 0 1 1 1h3a1 1 0 0 0 1 1v1.5M7 10l-1 4.5M7 10l1 4.5M17 10l-2 4.5M17 10l2 4.5" />
+    </svg>
   );
 }
 
