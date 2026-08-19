@@ -52,7 +52,7 @@ export function SiteLayout({
             <h1 id="sitetitle" className="text-3xl sm:text-4xl font-mono">
               ~/Invariant Thinking
             </h1>
-            <TreeGraphIcon className="h-8 w-8 sm:h-9 sm:w-9 transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3" aria-hidden />
+            <TreeGraphIcon className="h-8 w-8 sm:h-9 sm:w-9 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-3" aria-hidden />
           </Link>
           <span className="absolute bottom-1 right-3 text-base" style={{ fontFamily: '"STIX Two Math", "STIX Two Text", "Times New Roman", serif' }}>
             𝔼(<em style={{ fontStyle: "italic" }}>i</em>)
