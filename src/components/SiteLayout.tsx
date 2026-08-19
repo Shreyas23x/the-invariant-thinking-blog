@@ -47,7 +47,7 @@ export function SiteLayout({
   return (
     <div className="min-h-screen w-full">
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
-        <div id="header" className="otis-header relative flex items-center justify-center py-5">
+        <div id="header" className="otis-header relative flex items-center justify-start py-5 px-3">
           <Link to="/" className="group inline-flex items-center gap-3" style={{ color: "#ffffff" }}>
             <h1 id="sitetitle" className="text-3xl sm:text-4xl font-mono">
               ~/Invariant Thinking
