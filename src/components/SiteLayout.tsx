@@ -179,6 +179,30 @@ export function SiteLayout({
   );
 }
 
+function TreeGraphIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="4" r="1.6" />
+      <circle cx="7" cy="10" r="1.6" />
+      <circle cx="17" cy="10" r="1.6" />
+      <circle cx="5" cy="17" r="1.6" />
+      <circle cx="9" cy="17" r="1.6" />
+      <circle cx="15" cy="17" r="1.6" />
+      <circle cx="19" cy="17" r="1.6" />
+      <path d="M12 4v2.5a1 1 0 0 1-1 1H8a1 1 0 0 0-1 1v1.5M12 5.5a1 1 0 0 1 1 1h3a1 1 0 0 0 1 1v1.5M7 10l-1 4.5M7 10l1 4.5M17 10l-2 4.5M17 10l2 4.5" />
+    </svg>
+  );
+}
+
 function SiteFooter() {
   const views = useSiteViews();
   return (
