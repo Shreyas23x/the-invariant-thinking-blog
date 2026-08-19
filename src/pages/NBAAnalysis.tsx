@@ -7,7 +7,7 @@ export default function NBAAnalysis() {
   const items = postsByCategory(posts ?? [], "NBA Analysis");
   return (
     <SiteLayout pageTitle="NBA Analysis — Invariant Thinking" title="NBA Analysis">
-      <Panel subtitle="Numbers, networks, and notes on basketball.">
+      <Panel subtitle="Everything basketball related. I'm a Grizzlies fan 4life.">
         {items.length === 0 ? (
           <p className="text-sm italic text-[#445]">Nothing here yet — coming soon.</p>
         ) : (
