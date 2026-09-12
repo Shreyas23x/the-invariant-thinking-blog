@@ -11,9 +11,9 @@ export default function About() {
         <div>
           <div className="otis-label text-xs">Currently</div>
           <ul className="mt-1 space-y-1 text-xs">
-            <li>📍 Somewhere with good tea</li>
-            <li>💻 Building small tools</li>
-            <li>📓 Writing more, shipping less</li>
+            <li>📍 Near a basketball court</li>
+            <li>💻 Trying to build tools</li>
+            <li>📓 Writing, maybe not solving</li>
           </ul>
         </div>
       }
