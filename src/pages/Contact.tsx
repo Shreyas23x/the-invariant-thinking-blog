@@ -18,7 +18,7 @@ export default function Contact() {
           <div className="otis-label text-xs">Direct channels</div>
           <ul className="mt-1 space-y-1 text-xs">
             <li>
-              ✉ <EditableText contentKey="contact.email" fallback="hello@example.com" />
+              ✉ <EditableText contentKey="contact.email" fallback="1978coolguy1981@gmail.com" />
             </li>
             <li>
               ⌨{" "}
