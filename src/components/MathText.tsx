@@ -175,13 +175,16 @@ function renderParagraph(text: string, key: string): React.ReactNode {
  * Recognizes :::center / :::right / :::left / :::hide title="..." ... :::
  * and indented blockquotes via "> ".
  */
-type Block =
+type ListEnv = "itemize" | "enumerate" | "description";
+
+export type Block =
   | { type: "para"; text: string }
   | { type: "tikz"; source: string }
+  | { type: "list"; env: ListEnv; items: string[] }
   | { type: "align"; align: "center" | "right" | "left"; children: Block[] }
   | { type: "hide"; title: string; children: Block[] };
 
-function parseBlocks(body: string): Block[] {
+export function parseBlocks(body: string): Block[] {
   const lines = body.split("\n");
   const blocks: Block[] = [];
   let i = 0;
@@ -245,6 +248,40 @@ function parseBlocks(body: string): Block[] {
       top.push({ type: "para", text: p });
     }
     buf = [];
+  }
+  // Read an itemize/enumerate/description list starting just after its
+  // \begin{...} (or bare \itemize) line. `loose` (the bare \itemize form)
+  // also closes the list at a blank line followed by non-\item content.
+  function readListBody(env: ListEnv, firstInline: string | undefined, loose: boolean, out: Block[]) {
+    const itemLines: string[][] = [];
+    let cur: string[] = [];
+    if (firstInline && firstInline.trim() !== "") cur.push(firstInline);
+    const endRe = new RegExp(`^\\s*\\\\end\\{${env}\\}\\s*$`);
+    while (i < lines.length) {
+      const l2 = lines[i];
+      if (endRe.test(l2)) { i++; break; }
+      if (/^\s*:::\s*$/.test(l2) || /^\s*```/.test(l2)) break;
+      if (loose && /^\s*$/.test(l2)) {
+        let j = i + 1;
+        while (j < lines.length && /^\s*$/.test(lines[j])) j++;
+        const next = lines[j] ?? "";
+        if (!/^\s*\\item\b/.test(next) && !endRe.test(next)) break;
+      }
+      const itemM = l2.match(/^\s*\\item\b\s*(.*)$/);
+      if (itemM) {
+        if (cur.length || itemLines.length) itemLines.push(cur);
+        cur = [itemM[1] ?? ""];
+        i++;
+        continue;
+      }
+      // skip an optional-args-only line right after \begin{itemize}[...]
+      if (itemLines.length === 0 && cur.length === 0 && /^\s*\[[^\]]*\]\s*$/.test(l2)) { i++; continue; }
+      cur.push(l2);
+      i++;
+    }
+    if (cur.length) itemLines.push(cur);
+    const items = itemLines.map((l) => l.join("\n").trim()).filter((s) => s !== "");
+    out.push({ type: "list", env, items });
   }
   function readBlockUntilEnd(): Block[] {
     const innerBuf: string[] = [];
