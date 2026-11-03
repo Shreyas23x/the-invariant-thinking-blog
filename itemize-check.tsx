@@ -44,7 +44,7 @@ expect(html.includes("<ol"), "enumerate renders as <ol>");
 expect(html.includes("First point about"), "item text present");
 expect(/katex/.test(html) && html.includes("x"), "math inside items renders via KaTeX");
 expect(html.includes("After the shorthand list"), "text after bare \\itemize resumes");
-expect(html.includes("<li>Shorthand one"), "bare \\itemize items render");
+expect(/<li[^>]*>\s*<p>\s*<span>Shorthand one/.test(html), "bare \\itemize items render");
 expect(html.includes("Centered list item"), "list inside :::center renders");
 
 const blocks = parseBlocks(body);
