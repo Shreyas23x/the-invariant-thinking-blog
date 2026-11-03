@@ -50,14 +50,15 @@ function KatexBlock({ math }: { math: string }) {
 
 /**
  * Inline tokens supported within a paragraph:
- *   **bold**, *italic*, [text](url), $$display math$$, $inline math$
+ *   **bold**, *italic*, [text](url), $$display math$$, $inline math$,
+ *   \textbf{...}, \textit{...}, \emph{...}, \underline{...}, \texttt{...}
  */
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   // Tokenize in priority order. We use a single regex with alternation and
   // walk through matches to build a node list. $$...$$ MUST be tested before
   // $...$ to avoid the $-pair-collision bug.
   const re =
-    /(\$\$([\s\S]+?)\$\$)|(\$([^$\n]+?)\$)|(\[([^\]]+)\]\(([^)\s]+)\))|(\*\*([^*\n]+)\*\*)|(\*([^*\n]+)\*)/g;
+    /(\$\$([\s\S]+?)\$\$)|(\$([^$\n]+?)\$)|(\[([^\]]+)\]\(([^)\s]+)\))|(\*\*([^*\n]+)\*\*)|(\*([^*\n]+)\*)|(\\(textbf|textit|texttt|text|emph|underline|textsf|textsc)\{([^{}]*)\})/g;
   const nodes: React.ReactNode[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
@@ -88,6 +89,14 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
       nodes.push(<strong key={`${keyPrefix}-b-${i}`}>{m[9]}</strong>);
     } else if (m[11] !== undefined) {
       nodes.push(<em key={`${keyPrefix}-i-${i}`}>{m[11]}</em>);
+    } else if (m[12] !== undefined) {
+      const cmd = m[13];
+      const inner = m[14] ?? "";
+      if (cmd === "textbf") nodes.push(<strong key={`${keyPrefix}-tb-${i}`}>{inner}</strong>);
+      else if (cmd === "textit" || cmd === "emph") nodes.push(<em key={`${keyPrefix}-ti-${i}`}>{inner}</em>);
+      else if (cmd === "underline") nodes.push(<u key={`${keyPrefix}-ul-${i}`}>{inner}</u>);
+      else if (cmd === "texttt") nodes.push(<code key={`${keyPrefix}-tt-${i}`}>{inner}</code>);
+      else nodes.push(<span key={`${keyPrefix}-tx-${i}`}>{inner}</span>);
     }
     last = m.index + m[0].length;
     i++;
