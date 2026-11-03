@@ -50,14 +50,15 @@ function KatexBlock({ math }: { math: string }) {
 
 /**
  * Inline tokens supported within a paragraph:
- *   **bold**, *italic*, [text](url), $$display math$$, $inline math$
+ *   **bold**, *italic*, [text](url), $$display math$$, $inline math$,
+ *   \textbf{...}, \textit{...}, \emph{...}, \underline{...}, \texttt{...}
  */
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   // Tokenize in priority order. We use a single regex with alternation and
   // walk through matches to build a node list. $$...$$ MUST be tested before
   // $...$ to avoid the $-pair-collision bug.
   const re =
-    /(\$\$([\s\S]+?)\$\$)|(\$([^$\n]+?)\$)|(\[([^\]]+)\]\(([^)\s]+)\))|(\*\*([^*\n]+)\*\*)|(\*([^*\n]+)\*)/g;
+    /(\$\$([\s\S]+?)\$\$)|(\$([^$\n]+?)\$)|(\[([^\]]+)\]\(([^)\s]+)\))|(\*\*([^*\n]+)\*\*)|(\*([^*\n]+)\*)|(\\(textbf|textit|texttt|text|emph|underline|textsf|textsc)\{([^{}]*)\})/g;
   const nodes: React.ReactNode[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
@@ -88,6 +89,14 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
       nodes.push(<strong key={`${keyPrefix}-b-${i}`}>{m[9]}</strong>);
     } else if (m[11] !== undefined) {
       nodes.push(<em key={`${keyPrefix}-i-${i}`}>{m[11]}</em>);
+    } else if (m[12] !== undefined) {
+      const cmd = m[13];
+      const inner = m[14] ?? "";
+      if (cmd === "textbf") nodes.push(<strong key={`${keyPrefix}-tb-${i}`}>{inner}</strong>);
+      else if (cmd === "textit" || cmd === "emph") nodes.push(<em key={`${keyPrefix}-ti-${i}`}>{inner}</em>);
+      else if (cmd === "underline") nodes.push(<u key={`${keyPrefix}-ul-${i}`}>{inner}</u>);
+      else if (cmd === "texttt") nodes.push(<code key={`${keyPrefix}-tt-${i}`}>{inner}</code>);
+      else nodes.push(<span key={`${keyPrefix}-tx-${i}`}>{inner}</span>);
     }
     last = m.index + m[0].length;
     i++;
@@ -166,13 +175,16 @@ function renderParagraph(text: string, key: string): React.ReactNode {
  * Recognizes :::center / :::right / :::left / :::hide title="..." ... :::
  * and indented blockquotes via "> ".
  */
-type Block =
+type ListEnv = "itemize" | "enumerate" | "description";
+
+export type Block =
   | { type: "para"; text: string }
   | { type: "tikz"; source: string }
+  | { type: "list"; env: ListEnv; items: string[] }
   | { type: "align"; align: "center" | "right" | "left"; children: Block[] }
   | { type: "hide"; title: string; children: Block[] };
 
-function parseBlocks(body: string): Block[] {
+export function parseBlocks(body: string): Block[] {
   const lines = body.split("\n");
   const blocks: Block[] = [];
   let i = 0;
@@ -237,6 +249,40 @@ function parseBlocks(body: string): Block[] {
     }
     buf = [];
   }
+  // Read an itemize/enumerate/description list starting just after its
+  // \begin{...} (or bare \itemize) line. `loose` (the bare \itemize form)
+  // also closes the list at a blank line followed by non-\item content.
+  function readListBody(env: ListEnv, firstInline: string | undefined, loose: boolean, out: Block[]) {
+    const itemLines: string[][] = [];
+    let cur: string[] = [];
+    if (firstInline && firstInline.trim() !== "") cur.push(firstInline);
+    const endRe = new RegExp(`^\\s*\\\\end\\{${env}\\}\\s*$`);
+    while (i < lines.length) {
+      const l2 = lines[i];
+      if (endRe.test(l2)) { i++; break; }
+      if (/^\s*:::\s*$/.test(l2) || /^\s*```/.test(l2)) break;
+      if (loose && /^\s*$/.test(l2)) {
+        let j = i + 1;
+        while (j < lines.length && /^\s*$/.test(lines[j])) j++;
+        const next = lines[j] ?? "";
+        if (!/^\s*\\item\b/.test(next) && !endRe.test(next)) break;
+      }
+      const itemM = l2.match(/^\s*\\item\b\s*(.*)$/);
+      if (itemM) {
+        if (cur.length || itemLines.length) itemLines.push(cur);
+        cur = [itemM[1] ?? ""];
+        i++;
+        continue;
+      }
+      // skip an optional-args-only line right after \begin{itemize}[...]
+      if (itemLines.length === 0 && cur.length === 0 && /^\s*\[[^\]]*\]\s*$/.test(l2)) { i++; continue; }
+      cur.push(l2);
+      i++;
+    }
+    if (cur.length) itemLines.push(cur);
+    const items = itemLines.map((l) => l.join("\n").trim()).filter((s) => s !== "");
+    out.push({ type: "list", env, items });
+  }
   function readBlockUntilEnd(): Block[] {
     const innerBuf: string[] = [];
     const innerOut: Block[] = [];
@@ -281,6 +327,13 @@ function parseBlocks(body: string): Block[] {
         innerOut.push({ type: "hide", title: hideDir[1] || "Click to reveal", children: readBlockUntilEnd() });
         continue;
       }
+      const listStart = ln.match(/^\s*\\(?:begin\{(itemize|enumerate|description)\}|itemize\b\s*(.*)$)/);
+      if (listStart) {
+        flushInner();
+        i++;
+        readListBody((listStart[1] ?? "itemize") as ListEnv, listStart[2], !listStart[1], innerOut);
+        continue;
+      }
       innerBuf.push(ln);
       i++;
     }
@@ -315,6 +368,13 @@ function parseBlocks(body: string): Block[] {
       top.push({ type: "hide", title: hideDir[1] || "Click to reveal", children: readBlockUntilEnd() });
       continue;
     }
+    const listStart = ln.match(/^\s*\\(?:begin\{(itemize|enumerate|description)\}|itemize\b\s*(.*)$)/);
+    if (listStart) {
+      flushTop();
+      i++;
+      readListBody((listStart[1] ?? "itemize") as ListEnv, listStart[2], !listStart[1], top);
+      continue;
+    }
     buf.push(ln);
     i++;
   }
@@ -327,6 +387,27 @@ function parseBlocks(body: string): Block[] {
 function renderBlock(b: Block, key: string): React.ReactNode {
   if (b.type === "para") return renderParagraph(b.text, key);
   if (b.type === "tikz") return <TikzBlock key={key} source={b.source} />;
+  if (b.type === "list") {
+    const Tag = b.env === "enumerate" ? "ol" : "ul";
+    const cls =
+      b.env === "enumerate"
+        ? "my-2 pl-7 list-decimal"
+        : b.env === "description"
+          ? "my-2 pl-2 list-none"
+          : "my-2 pl-7 list-disc";
+    return (
+      <Tag key={key} className={cls}>
+        {b.items.map((it, idx) => {
+          const paras = it.split(/\n\s*\n/).filter((p) => p.trim() !== "");
+          return (
+            <li key={`${key}-${idx}`} className="my-1">
+              {paras.map((p, j) => renderParagraph(p, `${key}-${idx}-${j}`))}
+            </li>
+          );
+        })}
+      </Tag>
+    );
+  }
   if (b.type === "align") {
     const cls =
       b.align === "center" ? "text-center" : b.align === "right" ? "text-right" : "text-left";
