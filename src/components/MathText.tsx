@@ -327,6 +327,13 @@ export function parseBlocks(body: string): Block[] {
         innerOut.push({ type: "hide", title: hideDir[1] || "Click to reveal", children: readBlockUntilEnd() });
         continue;
       }
+      const listStart = ln.match(/^\s*\\(?:begin\{(itemize|enumerate|description)\}|itemize\b\s*(.*)$)/);
+      if (listStart) {
+        flushInner();
+        i++;
+        readListBody((listStart[1] ?? "itemize") as ListEnv, listStart[2], !listStart[1], innerOut);
+        continue;
+      }
       innerBuf.push(ln);
       i++;
     }
@@ -361,6 +368,13 @@ export function parseBlocks(body: string): Block[] {
       top.push({ type: "hide", title: hideDir[1] || "Click to reveal", children: readBlockUntilEnd() });
       continue;
     }
+    const listStart = ln.match(/^\s*\\(?:begin\{(itemize|enumerate|description)\}|itemize\b\s*(.*)$)/);
+    if (listStart) {
+      flushTop();
+      i++;
+      readListBody((listStart[1] ?? "itemize") as ListEnv, listStart[2], !listStart[1], top);
+      continue;
+    }
     buf.push(ln);
     i++;
   }
@@ -373,6 +387,27 @@ export function parseBlocks(body: string): Block[] {
 function renderBlock(b: Block, key: string): React.ReactNode {
   if (b.type === "para") return renderParagraph(b.text, key);
   if (b.type === "tikz") return <TikzBlock key={key} source={b.source} />;
+  if (b.type === "list") {
+    const Tag = b.env === "enumerate" ? "ol" : "ul";
+    const cls =
+      b.env === "enumerate"
+        ? "my-2 pl-7 list-decimal"
+        : b.env === "description"
+          ? "my-2 pl-2 list-none"
+          : "my-2 pl-7 list-disc";
+    return (
+      <Tag key={key} className={cls}>
+        {b.items.map((it, idx) => {
+          const paras = it.split(/\n\s*\n/).filter((p) => p.trim() !== "");
+          return (
+            <li key={`${key}-${idx}`} className="my-1">
+              {paras.map((p, j) => renderParagraph(p, `${key}-${idx}-${j}`))}
+            </li>
+          );
+        })}
+      </Tag>
+    );
+  }
   if (b.type === "align") {
     const cls =
       b.align === "center" ? "text-center" : b.align === "right" ? "text-right" : "text-left";
