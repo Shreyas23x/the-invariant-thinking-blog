@@ -1,0 +1,2 @@
+- [ ] Fix the Math page question rendering for the uploaded prisoner problem.
+- [ ] Refresh the live preview after the rendering fix and confirm it displays correctly.
