@@ -21,8 +21,6 @@ const KATEX_MACROS: Record<string, string> = {
   "\\CC": "\\mathbb{C}",
   "\\FF": "\\mathbb{F}",
   "\\eps": "\\varepsilon",
-  // common shortcuts users expect to "just work"
-  "\\neq": "\\ne",
 };
 
 function renderKatex(math: string, displayMode: boolean): string {

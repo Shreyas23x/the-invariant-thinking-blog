@@ -1,0 +1,2 @@
+- [x] Fix the Math page question rendering for the uploaded prisoner problem.
+- [x] Refresh the preview and confirm the question renders correctly.
